@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Trophy, Volleyball, Goal, Clock4 } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4 } from "lucide-react"
 import { db } from "@/lib/db"
 
 export default function PublicDashboard() {
@@ -173,11 +173,11 @@ export default function PublicDashboard() {
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
             <div className="bg-white p-4 rounded-2xl">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative overflow-hidden rounded-xl border-l-4 border-b-4 border-primary p-6">
+              <div className="grid md:grid-cols-2 gap-5">
+                <div className="relative overflow-hidden rounded-xl border-2 border-primary p-6 hover:shadow-lg transition-all">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
-                    <Trophy className="h-5 w-5 text-primary" />
+                    <Trophy className="size-7 text-primary" />
                   </div>
                   <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
                   <div className="mt-2 flex gap-2 text-xs font-bold">
@@ -187,10 +187,10 @@ export default function PublicDashboard() {
                   </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-xl border-l-4 border-b-4 border-secondary p-6">
+                <div className="relative overflow-hidden rounded-xl border-2 border-gray-400 p-6 hover:shadow-lg transition-all">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
-                    <Volleyball className="h-5 w-5 text-gray-500"/>
+                    <Goal className="size-7 text-gray-400"/>
                   </div>
                   <div className="flex items-end gap-2">
                     <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
@@ -198,7 +198,7 @@ export default function PublicDashboard() {
                   </div>
                   <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
                     <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
-                    <span className="h-1 w-1 rounded-full bg-gray-300"></span>
+                    <span className=" text-foreground">|</span>
                     <span className="text-accent">
                       {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
                       {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
@@ -206,10 +206,10 @@ export default function PublicDashboard() {
                   </div>
                 </div>
 
-                <div className="relative overflow-hidden rounded-xl border-l-4 border-b-4 border-accent p-6">
+                <div className="relative overflow-hidden rounded-xl border-2 border-accent p-6 hover:shadow-lg transition-all">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">% Victorias</span>
-                    <Goal className="h-5 w-5 text-accent" />
+                    <span className="text-sm font-bold uppercase text-gray-400">Victorias</span>
+                    <TrendingUp className="size-7 text-accent" />
                   </div>
                   <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
                   <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
