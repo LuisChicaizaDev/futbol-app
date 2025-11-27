@@ -98,7 +98,7 @@ export default function PublicDashboard() {
                   }}
                 ></div>
 
-                <div className="relative z-10 mb-6 flex items-center gap-2 rounded-full bg-black/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
+                <div className="relative z-10 mb-7 flex items-center gap-2 rounded-full bg-secondary/90 px-4 py-1.5 text-sm text-accent font-bold">
                   <Calendar className="h-4 w-4" />
                   {new Date(nextMatch.date).toLocaleDateString("es-ES", {
                     weekday: "long",
@@ -120,7 +120,7 @@ export default function PublicDashboard() {
                   </div>
                 </div>
 
-                <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-2 border-t px-6 py-4 text-md font-semibold backdrop-blur-sm">
+                <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-2 border-t px-6 pt-4 text-md font-semibold backdrop-blur-sm">
                   <div className="flex items-center justify-center gap-2">
                     <MapPin className="h-5 w-5 text-secondary" />
                     {nextMatch.location === "Local" ? teamInfo?.stadium : "Cancha Visitante"}
@@ -133,7 +133,7 @@ export default function PublicDashboard() {
               </div>
 
               <div className="flex flex-col justify-center bg-white p-8">
-                <h3 className="mb-6 font-heading text-xl uppercase text-primary">Detalles del Partido</h3>
+                <h3 className="mb-6 font-heading text-xl uppercase text-primary border-b-2 border-b-primary pb-4">Detalles del Partido</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Competición:</span>
@@ -142,10 +142,6 @@ export default function PublicDashboard() {
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Hora:</span>
                     <span className="font-bold text-foreground">{nextMatch.time}</span>
-                  </div>
-                  <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
-                    <span className="font-bold text-gray-500">Clima:</span>
-                    <span className="font-bold text-foreground">Soleado 24°C</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Concentración:</span>
