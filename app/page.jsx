@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4 } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, Medal } from "lucide-react"
 import { db } from "@/lib/db"
 
 export default function PublicDashboard() {
@@ -12,23 +12,27 @@ export default function PublicDashboard() {
   const [teamInfo, setTeamInfo] = useState(null)
   const [callUp, setCallUp] = useState([])
   const [lastMatches, setLastMatches] = useState([])
+  const [topScorers, setTopScorers] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [matchData, statsData, infoData, callUpData, lastMatchesData] = await Promise.all([
+        const [matchData, statsData, infoData, callUpData, lastMatchesData, playersData] = await Promise.all([
           db.getNextMatch(),
           db.getTeamStats(),
           db.getTeamInfo(),
           db.getCallUp(),
           db.getLastMatches(8),
+          db.getPlayers(),
         ])
         setNextMatch(matchData)
         setStats(statsData)
         setTeamInfo(infoData)
         setCallUp(callUpData)
         setLastMatches(lastMatchesData)
+        const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
+        setTopScorers(sortedScorers.slice(0, 6))
       } catch (error) {
         console.error("Error loading data:", error)
       } finally {
@@ -276,6 +280,56 @@ export default function PublicDashboard() {
             </div>
           </section>
         </div>
+
+        {/* Goleadores */}
+        <section className="mb-30">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-8 w-1.5 rounded-full bg-secondary"></div>
+            <h2 className="font-heading text-2xl uppercase text-primary md:text-3xl">Goleadores</h2>
+          </div>
+          <p className="text-gray-600 my-4 text-md ml-4">Máximos anotadores de la temporada</p>
+
+          {topScorers.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {topScorers.map((player, index) => (
+                <div key={player.id} className="flat-card relative overflow-hidden border-primary/20">
+                  <div className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-sm font-bold text-accent">
+                    {index + 1} º
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-xl font-bold text-primary">
+                        {player.number}
+                      </div>
+                      <div>
+                        <div className="font-heading text-lg uppercase text-foreground">{player.name}</div>
+                        <div className="text-xs font-bold uppercase text-gray-400">{player.position}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-end justify-between border-t border-dashed border-gray-200 pt-4">
+                      <div>
+                        <div className="text-xs font-bold uppercase text-gray-400">Goles</div>
+                        <div className="font-heading text-4xl text-accent">{player.goals ?? 0}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xs font-bold uppercase text-gray-400">Asistencias</div>
+                        <div className="font-heading text-2xl text-foreground">{player.assists ?? 0}</div>
+                      </div>
+                    </div>
+                    <div className="flex justify-between text-xs font-bold text-gray-500">
+                      <span>Partidos: {player.gamesPlayed ?? 0}</span>
+                      <span>Tarjetas: {player.yellowCards ?? 0}A / {player.redCards ?? 0}R</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
+              No hay registros de goleadores disponibles.
+            </div>
+          )}
+        </section>
 
         {/* Team Info y Convocatoria*/}
         <div className="grid gap-8 lg:grid-cols-3 my-12">
