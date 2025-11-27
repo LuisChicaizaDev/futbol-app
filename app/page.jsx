@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, Medal } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4 } from "lucide-react"
 import { db } from "@/lib/db"
 
 export default function PublicDashboard() {

@@ -16,7 +16,7 @@ import {
   ListChecks,
   Trophy, 
   Volleyball, 
-  Goal,
+  TrendingUp,
 } from "lucide-react"
 import { db } from "@/lib/db"
 import { PlayerManagement } from "@/components/admin/player-management"
@@ -141,6 +141,10 @@ export default function AdminDashboard() {
         <div className="p-8">
           {activeTab === "overview" && (
             <div className="space-y-8">
+              <h2 className="text-xl">Área de Administración</h2>
+              <p>
+                Controla toda la información del equipo: gestiona jugadores, organiza partidos, actualiza los datos del club y define las convocatorias.
+              </p>
               {/* Stats Cards */}
               <section className="my-6">
                 <h2 className="mb-4 font-heading text-lg uppercase text-gray-500">Estadísticas</h2>
@@ -181,7 +185,7 @@ export default function AdminDashboard() {
                   <div className="flat-card group relative overflow-hidden border-l-4 border-l-destructive p-6">
                     <div className="mb-2 flex items-center justify-between">
                       <span className="text-sm font-bold uppercase text-gray-400">Porcentaje Victorias</span>
-                      <Goal className="h-5 w-5 text-accent" />
+                      <TrendingUp className="h-5 w-5 text-accent" />
                     </div>
                     <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
                     <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
@@ -242,7 +246,7 @@ export default function AdminDashboard() {
         </div>
 
          {/* Footer */}
-        <footer className="mt-50 bg-primary py-8 text-white">
+        <footer className="mt-50 bg-accent py-6 text-white">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm">© 2025 Todos los derechos reservados.</p>
           </div>
