@@ -410,7 +410,7 @@ export default function PublicDashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-50 bg-primary py-8 text-white">
+      <footer className="mt-50 bg-accent py-6 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 font-heading text-2xl uppercase tracking-widest text-secondary">{teamInfo.name}</div>
           <p className="text-sm">© 2025 Todos los derechos reservados.</p>
