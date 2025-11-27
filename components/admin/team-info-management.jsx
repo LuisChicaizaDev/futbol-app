@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 
 export function TeamInfoManagement() {
   const [info, setInfo] = useState({
+    id: "",
     name: "",
     founded: "",
     stadium: "",
@@ -25,25 +26,48 @@ export function TeamInfoManagement() {
   const [saving, setSaving] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {
-    const loadInfo = async () => {
+  const loadInfo = useCallback(async () => {
+    try {
+      setLoading(true)
       const data = await db.getTeamInfo()
       setInfo(data)
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: "destructive",
+        title: "Error al cargar",
+        description: "No pudimos obtener la información del equipo. Intenta nuevamente.",
+      })
+    } finally {
       setLoading(false)
     }
+  }, [toast])
+
+  useEffect(() => {
     loadInfo()
-  }, [])
+  }, [loadInfo])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setSaving(true)
-    await db.updateTeamInfo(info)
-    setSaving(false)
-    toast({
-      variant: "success",
-      title: "Información actualizada",
-      description: "Los datos del equipo se han guardado correctamente.",
-    })
+    try {
+      setSaving(true)
+      const updatedInfo = await db.updateTeamInfo(info)
+      setInfo(updatedInfo)
+      toast({
+        variant: "success",
+        title: "Información actualizada",
+        description: "Los datos del equipo se guardaron correctamente.",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: "destructive",
+        title: "Error al guardar",
+        description: "No pudimos actualizar la información. Revisa los datos e intenta de nuevo.",
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleImageUpload = (e) => {
