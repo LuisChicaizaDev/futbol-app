@@ -1,0 +1,40 @@
+# -------------------------------------
+# Node / Next.js
+# -------------------------------------
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Supabase generated files
+supabase/.temp/
+supabase/.branches/
+
+# Vercel
+.vercel/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Cursor / AI tools
+.cursor/
+*.cursor
