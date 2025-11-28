@@ -50,14 +50,14 @@ export function TeamInfoManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      setSaving(true)
+    setSaving(true)
       const updatedInfo = await db.updateTeamInfo(info)
       setInfo(updatedInfo)
-      toast({
-        variant: "success",
-        title: "Información actualizada",
+    toast({
+      variant: "success",
+      title: "Información actualizada",
         description: "Los datos del equipo se guardaron correctamente.",
-      })
+    })
     } catch (error) {
       console.error(error)
       toast({
