@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Lock, User, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { db } from "@/lib/db"
+import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"  // import Supabase Auth
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [teamInfo, setTeamInfo] = useState(null)
   const router = useRouter()
+  const supabase = createSupabaseBrowserClient()  // Agregar cliente
 
   useEffect(() => {
     const loadData = async () => {
@@ -31,23 +33,28 @@ export default function LoginPage() {
     loadData()
   }, [])
 
+
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
     setError("")
 
-    // Mock authentication - Replace with Supabase auth later
-    // supabase.auth.signInWithPassword({ email, password })
-    // Simulación de autenticación
-    setTimeout(() => {
-      if (email === "admin@brasilfc.com" && password === "admin123") {
-        localStorage.setItem("isAuthenticated", "true")
-        router.push("/admin")
-      } else {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (error) {
         setError("Credenciales no válidas")
-        setLoading(false)
+      } else {
+        router.push("/admin")  // Redirigir al admin si login OK
       }
-    }, 1000)
+    } catch (err) {
+      setError("Error de conexión. Intenta nuevamente.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -87,7 +94,7 @@ export default function LoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@brasilfc.com"
+                placeholder="admin@futbolapp.com"
                 className="pl-10 rounded-md border-gray-200 focus:border-primary focus:ring-0"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -124,7 +131,7 @@ export default function LoginPage() {
           </Button>
         </form>
         <div className="flex justify-center border-t border-gray-100 p-4">
-          <p className="text-xs text-muted-foreground">Credenciales demo: admin@brasilfc.com / admin123</p>
+          <p className="text-xs text-muted-foreground">Credenciales demo: admin@futbolapp.com / admin123</p>
         </div>
       </div>
     </div>

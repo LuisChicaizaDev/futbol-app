@@ -18,38 +18,44 @@ import {
   Volleyball, 
   TrendingUp,
 } from "lucide-react"
-import { db } from "@/lib/db"
+import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { PlayerManagement } from "@/components/admin/player-management"
 import { MatchManagement } from "@/components/admin/match-management"
 import { CallUpManagement } from "@/components/admin/callup-management"
 import { TeamInfoManagement } from "@/components/admin/team-info-management"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"  // import Supabase Auth
 
 export default function AdminDashboard() {
+
   const [activeTab, setActiveTab] = useState("overview")
   const [stats, setStats] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
+  const supabase = createSupabaseBrowserClient()  // Agregar cliente
 
   useEffect(() => {
-    const auth = localStorage.getItem("isAuthenticated")
-    if (!auth) {
-      router.push("/login")
-    } else {
-      setIsAuthenticated(true)
-      const loadStats = async () => {
-        const data = await db.getTeamStats()
-        setStats(data)
-        setLoading(false)
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.push("/login") // Si se intenta accede a /admin sin logarse, redirige a /login
+      } else {
+        setIsAuthenticated(true)
+        const loadStats = async () => {
+          const data = await db.getTeamStats()
+          setStats(data)
+          setLoading(false)
+        }
+        loadStats()
       }
-      loadStats()
     }
-  }, [router])
+    checkAuth()
+  }, [router, supabase])
 
-  const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated")
-    router.push("/login")
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    router.push("/login") // Cerrar sesión envia al login
   }
 
   if (loading) {
