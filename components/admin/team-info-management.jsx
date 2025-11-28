@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { db } from "@/lib/db"
+import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { Save, Loader2, Upload } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
@@ -99,8 +99,9 @@ export function TeamInfoManagement() {
 
   if (loading) {
     return (
-      <div className="flex justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white">
+        <p className="text-accent">Cargando...</p>
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
       </div>
     )
   }
