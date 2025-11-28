@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2 } from "lucide-react"
-import { players as initialPlayers } from "@/lib/mock-data"
+import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
+import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
   AlertDialog,
@@ -24,10 +24,13 @@ import {
 } from "@/components/ui/alert-dialog"
 
 export function PlayerManagement() {
-  const [players, setPlayers] = useState(initialPlayers)
+  const [players, setPlayers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const { toast } = useToast()
+  const [error, setError] = useState(null)
   const [formData, setFormData] = useState({
     name: "",
     number: "",
@@ -35,43 +38,99 @@ export function PlayerManagement() {
     age: "",
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (editingId) {
-      setPlayers(
-        players.map((p) =>
-          p.id === editingId
-            ? { ...p, ...formData, number: Number.parseInt(formData.number), age: Number.parseInt(formData.age) }
-            : p,
-        ),
-      )
-      setEditingId(null)
+  const loadPlayers = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null) // Limpiar error anterior
+      const data = await db.getPlayers()
+      setPlayers(data)
+    } catch (error) {
+      console.error(error)
+      setError("No pudimos cargar la lista de jugadores. Verifica tu conexión e intenta nuevamente.")
       toast({
-        variant: "success",
-        title: "Jugador actualizado",
-        description: "Los datos del jugador han sido actualizados.",
+        variant: "destructive",
+        title: "Error al cargar",
+        description: "No pudimos obtener la lista de jugadores. Intenta nuevamente.",
       })
-    } else {
-      const newPlayer = {
-        id: Math.max(...players.map((p) => p.id)) + 1,
-        ...formData,
-        number: Number.parseInt(formData.number),
-        age: Number.parseInt(formData.age),
-        goals: 0,
-        assists: 0,
-        yellowCards: 0,
-        redCards: 0,
-        gamesPlayed: 0,
-      }
-      setPlayers([...players, newPlayer])
-      toast({
-        variant: "success",
-        title: "Jugador agregado",
-        description: "El nuevo jugador ha sido añadido a la plantilla.",
-      })
+    } finally {
+      setLoading(false)
     }
-    setFormData({ name: "", number: "", position: "Delantero", age: "" })
-    setIsAdding(false)
+  }, [toast])
+
+  useEffect(() => {
+    loadPlayers()
+  }, [loadPlayers])
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const numberExists = players.some(p => 
+      p.number === Number.parseInt(formData.number) && p.id !== editingId
+    )
+    
+    if (numberExists) {
+      toast({
+        variant: "destructive",
+        title: "Número duplicado",
+        description: "Ya existe un jugador con este número. Por favor elige un número diferente.",
+      })
+      return
+    }
+    
+    try {
+      setSaving(true)
+      
+      if (editingId) {
+        const updatedPlayer = await db.updatePlayer(editingId, {
+          number: Number.parseInt(formData.number),
+          name: formData.name,
+          position: formData.position,
+          age: Number.parseInt(formData.age),
+        })
+        
+        setPlayers(players.map(p => p.id === editingId ? updatedPlayer : p))
+        
+        toast({
+          variant: "success",
+          title: "Jugador actualizado",
+          description: "Los datos del jugador han sido actualizados.",
+        })
+      } else {
+        const newPlayer = await db.createPlayer({
+          number: Number.parseInt(formData.number),
+          name: formData.name,
+          position: formData.position,
+          age: Number.parseInt(formData.age),
+        })
+        
+        setPlayers([...players, newPlayer])
+        
+        toast({
+          variant: "success",
+          title: "Jugador agregado",
+          description: "El nuevo jugador ha sido añadido a la plantilla.",
+        })
+      }
+      
+      setFormData({ name: "", number: "", position: "Delantero", age: "" })
+      setIsAdding(false)
+      setEditingId(null)
+      
+    } catch (error) {
+      console.error(error)
+
+      // Show specific error message or fallback to generic
+      const errorMessage = error.message || "No pudimos guardar los datos del jugador. Inténtalo de nuevo."
+
+      toast({
+        variant: "destructive",
+        title: "Error al guardar",
+        description: errorMessage,
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleEdit = (player) => {
@@ -85,13 +144,27 @@ export function PlayerManagement() {
     setIsAdding(true)
   }
 
-  const handleDelete = (id) => {
-    setPlayers(players.filter((p) => p.id !== id))
-    toast({
-      variant: "destructive",
-      title: "Jugador eliminado",
-      description: "El jugador ha sido eliminado de la plantilla.",
-    })
+  const handleDelete = async (id) => {
+    try {
+      setSaving(true)
+      await db.deletePlayer(id)
+      setPlayers(players.filter(p => p.id !== id))
+      
+      toast({
+        variant: "destructive",
+        title: "Jugador eliminado",
+        description: "El jugador ha sido eliminado de la plantilla.",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: "destructive",
+        title: "Error al eliminar",
+        description: "No pudimos eliminar al jugador. Inténtalo de nuevo.",
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleCancel = () => {
@@ -100,17 +173,36 @@ export function PlayerManagement() {
     setFormData({ name: "", number: "", position: "Delantero", age: "" })
   }
 
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="flex justify-center p-8">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </CardContent>
+      </Card>
+    )
+  }
+
+  
+
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Gestión de Jugadores</CardTitle>
-          {!isAdding && (
-            <Button onClick={() => setIsAdding(true)} size="sm">
-              <Plus className="mr-2 h-4 w-4" />
-              Agregar Jugador
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {error && (
+              <Button onClick={loadPlayers} variant="outline" size="sm">
+                Reintentar
+              </Button>
+            )}
+            {!isAdding && (
+              <Button onClick={() => setIsAdding(true)} size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                Agregar Jugador
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -124,6 +216,7 @@ export function PlayerManagement() {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
+                  disabled={saving}
                 />
               </div>
               <div className="space-y-2">
@@ -134,6 +227,7 @@ export function PlayerManagement() {
                   value={formData.number}
                   onChange={(e) => setFormData({ ...formData, number: e.target.value })}
                   required
+                  disabled={saving}
                 />
               </div>
               <div className="space-y-2">
@@ -141,6 +235,7 @@ export function PlayerManagement() {
                 <Select
                   value={formData.position}
                   onValueChange={(value) => setFormData({ ...formData, position: value })}
+                  disabled={saving}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -161,18 +256,29 @@ export function PlayerManagement() {
                   value={formData.age}
                   onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                   required
+                  disabled={saving}
                 />
               </div>
             </div>
             <div className="flex gap-2">
-              <Button type="submit">{editingId ? "Actualizar" : "Agregar"}</Button>
-              <Button type="button" variant="outline" onClick={handleCancel}>
+              <Button type="submit" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {editingId ? "Actualizando..." : "Agregando..."}
+                    </>
+                  ) : (
+                    editingId ? "Actualizar" : "Agregar"
+                  )}
+              </Button>
+              <Button type="button" variant="outline" onClick={handleCancel} disabled={saving}>
                 Cancelar
               </Button>
             </div>
           </form>
         )}
 
+        {/* Tabla para mostrar los jugadores */}
         <div className="rounded-lg border">
           <Table>
             <TableHeader>
@@ -188,10 +294,21 @@ export function PlayerManagement() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {players.map((player) => (
+            {players.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <div className="flex flex-col items-center gap-2">
+                    <Plus className="h-8 w-8" />
+                    <p>No hay jugadores registrados aún</p>
+                    <p className="text-sm">Comienza agregando el primer jugador a la plantilla</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              players.map((player) => (
                 <TableRow key={player.id}>
                   <TableCell className="font-bold">{player.number}</TableCell>
-                  <TableCell className="font-medium">{player.name}</TableCell>
+                  <TableCell className="font-medium capitalize">{player.name}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{player.position}</Badge>
                   </TableCell>
@@ -210,6 +327,7 @@ export function PlayerManagement() {
                             size="sm"
                             variant="ghost"
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            disabled={saving}
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -218,7 +336,7 @@ export function PlayerManagement() {
                           <AlertDialogHeader>
                             <AlertDialogTitle>¿Eliminar jugador?</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Esta acción eliminará a {player.name} de la plantilla permanentemente.
+                              Esta acción eliminará a <strong>{player.name}</strong> de la plantilla permanentemente.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
@@ -226,8 +344,16 @@ export function PlayerManagement() {
                             <AlertDialogAction
                               onClick={() => handleDelete(player.id)}
                               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                              disabled={saving}
                             >
-                              Eliminar
+                              {saving ? (
+                                <>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  Eliminando...
+                                </>
+                              ) : (
+                                "Eliminar"
+                              )}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -235,7 +361,8 @@ export function PlayerManagement() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))
+            )}
             </TableBody>
           </Table>
         </div>
