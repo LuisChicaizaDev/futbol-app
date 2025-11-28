@@ -44,7 +44,7 @@ export default function LoginPage() {
         localStorage.setItem("isAuthenticated", "true")
         router.push("/admin")
       } else {
-        setError("Credenciales inválidas")
+        setError("Credenciales no válidas")
         setLoading(false)
       }
     }, 1000)
@@ -58,7 +58,7 @@ export default function LoginPage() {
           Volver al inicio
         </Button>
       </Link>
-      <div className="w-full max-w-md border-2 border-gray-200 bg-white p-8 shadow-none">
+      <div className="w-full max-w-md rounded-lg border-2 border-gray-200 bg-white p-8 shadow-none">
         <div className="mb-8 text-center">
           {teamInfo?.logoUrl ? (
               <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-2xl">
@@ -70,7 +70,7 @@ export default function LoginPage() {
               </div>
             ) : (
               <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
-                {teamInfo?.name?.substring(0, 1).toUpperCase()}
+                {teamInfo?.name?.substring(0, 1).toUpperCase() || 'A'}
               </div>
             )}
           <h1 className="text-2xl font-bold uppercase text-accent">Acceso Admin</h1>
