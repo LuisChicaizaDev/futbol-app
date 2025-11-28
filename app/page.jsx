@@ -66,7 +66,7 @@ export default function PublicDashboard() {
                 </div>
               ) : (
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-4xl font-bold text-white">
-                  {teamInfo?.name.substring(0, 1).toUpperCase()}
+                  {teamInfo?.name.substring(0, 1).toUpperCase() || 'F'}
                 </div>
               )}
               
@@ -156,7 +156,7 @@ export default function PublicDashboard() {
             </div>
           ) : (
             <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-              <p className="text-xl font-bold text-gray-400">No hay partidos programados</p>
+              <p className="text-xl font-bold text-gray-400">No hay partidos programados.</p>
             </div>
           )}
         </section>
@@ -172,50 +172,56 @@ export default function PublicDashboard() {
 
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
-            <div className="bg-white p-4 rounded-2xl">
-              <div className="grid md:grid-cols-2 gap-5">
-                <div className="relative overflow-hidden rounded-xl border-2 border-primary p-6 hover:shadow-lg transition-all">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
-                    <Trophy className="size-7 text-primary" />
+            {stats.length > 0 ? (
+              <div className="bg-white p-4 rounded-2xl">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div className="relative overflow-hidden rounded-xl border-2 border-primary p-6 hover:shadow-lg transition-all">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
+                      <Trophy className="size-7 text-primary" />
+                    </div>
+                    <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
+                    <div className="mt-2 flex gap-2 text-xs font-bold">
+                      <span className="text-green-600">{stats?.wins || 0} G</span>
+                      <span className="text-yellow-600">{stats?.draws || 0} E</span>
+                      <span className="text-red-600">{stats?.losses || 0} P</span>
+                    </div>
                   </div>
-                  <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
-                  <div className="mt-2 flex gap-2 text-xs font-bold">
-                    <span className="text-green-600">{stats?.wins || 0} G</span>
-                    <span className="text-yellow-600">{stats?.draws || 0} E</span>
-                    <span className="text-red-600">{stats?.losses || 0} P</span>
-                  </div>
-                </div>
 
-                <div className="relative overflow-hidden rounded-xl border-2 border-gray-400 p-6 hover:shadow-lg transition-all">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
-                    <Goal className="size-7 text-gray-400"/>
+                  <div className="relative overflow-hidden rounded-xl border-2 border-gray-400 p-6 hover:shadow-lg transition-all">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
+                      <Goal className="size-7 text-gray-400"/>
+                    </div>
+                    <div className="flex items-end gap-2">
+                      <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
+                      <div className="mb-1 text-sm font-bold text-green-600">A Favor</div>
+                    </div>
+                    <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
+                      <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
+                      <span className=" text-foreground">|</span>
+                      <span className="text-accent">
+                        {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
+                        {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-end gap-2">
-                    <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
-                    <div className="mb-1 text-sm font-bold text-green-600">A Favor</div>
-                  </div>
-                  <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
-                    <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
-                    <span className=" text-foreground">|</span>
-                    <span className="text-accent">
-                      {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
-                      {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
-                    </span>
-                  </div>
-                </div>
 
-                <div className="relative overflow-hidden rounded-xl border-2 border-accent p-6 hover:shadow-lg transition-all">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Victorias</span>
-                    <TrendingUp className="size-7 text-accent" />
+                  <div className="relative overflow-hidden rounded-xl border-2 border-accent p-6 hover:shadow-lg transition-all">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-bold uppercase text-gray-400">Victorias</span>
+                      <TrendingUp className="size-7 text-accent" />
+                    </div>
+                    <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
+                    <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
                   </div>
-                  <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
-                  <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+                <p className="text-md font-semibold text-gray-400">Aún no hay estadísticas del equipo disponible.</p>
+              </div>
+            )}
           </section>
 
           {/* Resultados Partidos */}
@@ -273,8 +279,8 @@ export default function PublicDashboard() {
                 )
               })}
               {lastMatches.length === 0 && (
-                <div className="col-span-full rounded-xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
-                  No hay partidos jugados registrados.
+                <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
+                  <p className="text-md font-semibold text-gray-400">No hay partidos jugados registrados.</p>
                 </div>
               )}
             </div>
@@ -325,8 +331,8 @@ export default function PublicDashboard() {
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
-              No hay registros de goleadores disponibles.
+            <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
+              <p className="text-md font-semibold text-gray-400">No hay registros de goleadores disponibles.</p>
             </div>
           )}
         </section>
@@ -339,40 +345,46 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-secondary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">El Club</h2>
             </div>
-            <div className="flat-card bg-white">
-              <div className="mb-6 text-center">
-                {teamInfo?.logoUrl ? (
-                  <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-2xl">
-                    <img
-                      src={teamInfo.logoUrl}
-                      alt={teamInfo.name}
-                      className="h-full w-full object-cover"
-                    />
+            {teamInfo.length > 0 ? (
+              <div className="flat-card bg-white">
+                <div className="mb-6 text-center">
+                  {teamInfo?.logoUrl ? (
+                    <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-2xl">
+                      <img
+                        src={teamInfo.logoUrl}
+                        alt={teamInfo.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
+                      {teamInfo?.name.substring(0, 1).toUpperCase()}
+                    </div>
+                  )}
+                  <h3 className="font-heading text-xl uppercase text-primary">{teamInfo?.name}</h3>
+                  <p className="text-sm font-bold text-gray-400">Fundado en {teamInfo?.founded}</p>
+                </div>
+                <p className="mb-6 text-sm leading-relaxed text-gray-600">{teamInfo?.description}</p>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between rounded-lg bg-gray-50 p-3">
+                    <span className="font-bold text-gray-500">Presidente</span>
+                    <span className="font-bold text-foreground">{teamInfo?.president}</span>
                   </div>
-                ) : (
-                  <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
-                    {teamInfo?.name.substring(0, 1).toUpperCase()}
+                  <div className="flex justify-between rounded-lg bg-gray-50 p-3">
+                    <span className="font-bold text-gray-500">DT</span>
+                    <span className="font-bold text-foreground">{teamInfo?.coach}</span>
                   </div>
-                )}
-                <h3 className="font-heading text-xl uppercase text-primary">{teamInfo?.name}</h3>
-                <p className="text-sm font-bold text-gray-400">Fundado en {teamInfo?.founded}</p>
-              </div>
-              <p className="mb-6 text-sm leading-relaxed text-gray-600">{teamInfo?.description}</p>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between rounded-lg bg-gray-50 p-3">
-                  <span className="font-bold text-gray-500">Presidente</span>
-                  <span className="font-bold text-foreground">{teamInfo?.president}</span>
-                </div>
-                <div className="flex justify-between rounded-lg bg-gray-50 p-3">
-                  <span className="font-bold text-gray-500">DT</span>
-                  <span className="font-bold text-foreground">{teamInfo?.coach}</span>
-                </div>
-                <div className="flex justify-between rounded-lg bg-gray-50 p-3">
-                  <span className="font-bold text-gray-500">Sede</span>
-                  <span className="font-bold text-foreground">{teamInfo?.city}</span>
+                  <div className="flex justify-between rounded-lg bg-gray-50 p-3">
+                    <span className="font-bold text-gray-500">Sede</span>
+                    <span className="font-bold text-foreground">{teamInfo?.city}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
+                <p className="text-md font-semibold text-gray-400">Aún no hay informarción del equipo disponible.</p>
+              </div>
+            )}
           </div>
 
           {/* Convocatoria */}
@@ -401,8 +413,8 @@ export default function PublicDashboard() {
                 ))}
             </div>
             {callUp.filter((p) => p.status === "Convocado").length === 0 && (
-              <div className="rounded-xl border-2 border-dashed border-gray-200 p-8 text-center text-gray-400">
-                Aún no se ha anunciado la convocatoria.
+              <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
+                <p className="text-md font-semibold text-gray-400">Aún no se ha anunciado la convocatoria.</p>
               </div>
             )}
           </div>
