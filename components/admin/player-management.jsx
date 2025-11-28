@@ -177,7 +177,10 @@ export function PlayerManagement() {
     return (
       <Card>
         <CardContent className="flex justify-center p-8">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="flex flex-col items-center justify-center gap-2 bg-white">
+            <p className="text-accent">Cargando...</p>
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          </div>
         </CardContent>
       </Card>
     )
