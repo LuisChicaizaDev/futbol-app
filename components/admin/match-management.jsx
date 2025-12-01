@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
-import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
+import { Plus, Pencil, Trash2, Loader2, AlertCircle } from "lucide-react"
+//import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
   AlertDialog,
@@ -226,9 +226,7 @@ export function MatchManagement() {
         <CardContent className="p-8">
           <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
             <div className="text-destructive mb-4">
-              <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-              </svg>
+              <AlertCircle className="mx-auto h-12 w-12" />
             </div>
             <h3 className="text-lg font-medium text-destructive mb-2">Error al cargar datos</h3>
             <p className="text-muted-foreground mb-4">{error}</p>
