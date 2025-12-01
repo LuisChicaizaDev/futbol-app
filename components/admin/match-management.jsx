@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2, Loader2, AlertCircle } from "lucide-react"
+import { Plus, Pencil, Trash2, Loader2, AlertCircle, CalendarIcon } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -243,7 +243,15 @@ export function MatchManagement() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Gestión de Partidos</CardTitle>
+          <div className="flex flex-col gap-2">
+            <CardTitle className="flex items-center gap-2">
+              <CalendarIcon className="h-5 w-5" />
+              Gestión de Partidos
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Partidos jugados: <strong>{sortedMatches.filter(match => match.played).length}</strong>
+            </p>
+          </div>
           <div className="flex gap-2">
             {error && (
               <Button onClick={loadMatches} variant="outline" size="sm">
