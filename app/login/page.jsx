@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Lock, User, ArrowLeft } from "lucide-react"
+import { Lock, User, ArrowLeft, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"  // import Supabase Auth
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [teamInfo, setTeamInfo] = useState(null)
   const router = useRouter()
   const supabase = createSupabaseBrowserClient()  // Agregar cliente
@@ -110,13 +111,25 @@ export default function LoginPage() {
               <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
-                className="pl-10 rounded-md border-gray-200 focus:border-primary focus:ring-0"
+                className="pl-10 pr-10 rounded-md border-gray-200 focus:border-primary focus:ring-0"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors"
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
             </div>
           </div>
 
