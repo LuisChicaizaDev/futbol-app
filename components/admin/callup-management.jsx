@@ -30,18 +30,42 @@ export function CallUpManagement() {
       if (match) {
         // Cargar convocatorias para el próximo partido
         const callups = await db.getCallUp()
-        setCallUp(callups.map(c => ({
-          playerId: c.id,
-          status: c.status
-        })))
         
         // Carga todos los jugadores
         const allPlayers = await db.getPlayers()
         setPlayers(allPlayers)
         
-        // Si no existen convocatorias, cree las iniciales
-        if (callups.length === 0 && allPlayers.length > 0) {
-          await initializeCallUps(match.id, allPlayers)
+        // Verificar si hay nuevos jugadores que no están en las convocatorias
+        const existingPlayerIds = callups.map(c => c.id) // Corregido: era c.player.id
+        const newPlayers = allPlayers.filter(player => !existingPlayerIds.includes(player.id))
+        
+        if (newPlayers.length > 0) {
+          // Agregar los nuevos jugadores automáticamente con status "Convocado"
+          const newPlayerIds = newPlayers.map(p => p.id)
+          await db.createInitialCallUps(match.id, newPlayerIds)
+          
+          // Recargar convocatorias para incluir los nuevos
+          const updatedCallups = await db.getCallUp()
+          setCallUp(updatedCallups.map(c => ({
+            playerId: c.id,
+            status: c.status
+          })))
+          
+          toast({
+            title: "Nuevos jugadores agregados",
+            description: `${newPlayers.length} jugador(es) nuevo(s) han sido añadidos a la convocatoria.`,
+          })
+        } else {
+          // Si no existen convocatorias, cree las iniciales
+          if (callups.length === 0 && allPlayers.length > 0) {
+            await initializeCallUps(match.id, allPlayers)
+          } else {
+            // Usar convocatorias existentes
+            setCallUp(callups.map(c => ({
+              playerId: c.id,
+              status: c.status
+            })))
+          }
         }
       } else {
         setPlayers([])

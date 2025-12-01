@@ -26,13 +26,33 @@ export default function PublicDashboard() {
           db.getLastMatches(8),
           db.getPlayers(),
         ])
+        
         setNextMatch(matchData)
         setStats(statsData)
         setTeamInfo(infoData)
-        setCallUp(callUpData)
         setLastMatches(lastMatchesData)
         const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
         setTopScorers(sortedScorers.slice(0, 6))
+        
+        // Inicializar convocatorias automáticamente si faltan
+        if (matchData && callUpData.length === 0 && playersData.length > 0) {
+          try {
+            // Crear convocatorias para los primeros 18 jugadores
+            const initialPlayerIds = playersData.slice(0, 18).map(p => p.id)
+            await db.createInitialCallUps(matchData.id, initialPlayerIds)
+            
+            // Recargar convocatorias con las nuevas
+            const updatedCallUps = await db.getCallUp()
+            setCallUp(updatedCallUps)
+          } catch (error) {
+            console.error("Error inicializando convocatorias automáticamente:", error)
+            // Si falla, usar convocatorias originales (vacías)
+            setCallUp(callUpData)
+          }
+        } else {
+          setCallUp(callUpData)
+        }
+        
       } catch (error) {
         console.error("Error loading data:", error)
       } finally {
