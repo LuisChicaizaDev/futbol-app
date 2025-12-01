@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Loader2, Users } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -212,7 +212,15 @@ export function PlayerManagement() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>Gestión de Jugadores</CardTitle>
+          <div className="flex flex-col gap-2">
+            <CardTitle className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Gestión de Jugadores
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Total jugadores en la plantilla: <strong className="capitalize">{players.length}</strong>
+            </p>
+          </div>
           <div className="flex gap-2">
             {error && (
               <Button onClick={loadPlayers} variant="outline" size="sm">
