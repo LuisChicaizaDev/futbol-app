@@ -211,7 +211,7 @@ export function PlayerManagement() {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex flex-col gap-2">
             <CardTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" />
