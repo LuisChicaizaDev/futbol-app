@@ -346,6 +346,9 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-secondary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">El Club</h2>
             </div>
+
+            <p className="text-gray-600 my-4 text-md ml-4">Información general del equipo</p>
+
             {teamInfo ? (
               <div className="flat-card bg-white">
                 <div className="mb-6 text-center">
@@ -369,15 +372,15 @@ export default function PublicDashboard() {
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Presidente</span>
-                    <span className="font-bold text-foreground">{teamInfo?.president}</span>
+                    <span className="font-bold text-foreground capitalize">{teamInfo?.president}</span>
                   </div>
                   <div className="flex justify-between rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">DT</span>
-                    <span className="font-bold text-foreground">{teamInfo?.coach}</span>
+                    <span className="font-bold text-foreground capitalize">{teamInfo?.coach}</span>
                   </div>
                   <div className="flex justify-between rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Sede</span>
-                    <span className="font-bold text-foreground">{teamInfo?.city}</span>
+                    <span className="font-bold text-foreground capitalize">{teamInfo?.city}</span>
                   </div>
                 </div>
               </div>
