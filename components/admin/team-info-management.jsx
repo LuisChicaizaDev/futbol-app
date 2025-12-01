@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { uploadLogo, deleteLogo } from "@/lib/db"
-import { Save, Loader2, Upload } from "lucide-react"
+import { Save, Loader2, Upload, AlertCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 export function TeamInfoManagement() {
@@ -25,15 +25,18 @@ export function TeamInfoManagement() {
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
   const { toast } = useToast()
 
   const loadInfo = useCallback(async () => {
     try {
       setLoading(true)
+      setError(null) // Limpiar error anterior
       const data = await db.getTeamInfo()
       setInfo(data)
     } catch (error) {
       console.error(error)
+      setError("No pudimos obtener la información del equipo. Verifica tu conexión e intenta nuevamente.")
       toast({
         variant: "destructive",
         title: "Error al cargar",
@@ -152,6 +155,25 @@ export function TeamInfoManagement() {
         <p className="text-accent">Cargando...</p>
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
       </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="p-8">
+          <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+            <div className="text-destructive mb-4">
+              <AlertCircle className="mx-auto h-12 w-12" />
+            </div>
+            <h3 className="text-lg font-medium text-destructive mb-2">Error al cargar datos</h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={loadInfo} variant="outline">
+              Intentar nuevamente
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
