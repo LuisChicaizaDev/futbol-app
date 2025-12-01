@@ -29,6 +29,7 @@ export default function AdminDashboard() {
 
   const [activeTab, setActiveTab] = useState("overview")
   const [stats, setStats] = useState(null)
+  const [playerCount, setPlayerCount] = useState(0)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -43,8 +44,10 @@ export default function AdminDashboard() {
       } else {
         setIsAuthenticated(true)
         const loadStats = async () => {
-          const data = await db.getTeamStats()
-          setStats(data)
+          const teamStats = await db.getTeamStats()
+          const players = await db.getPlayers()
+          setStats(teamStats)
+          setPlayerCount(players.length)
           setLoading(false)
         }
         loadStats()
@@ -197,9 +200,19 @@ export default function AdminDashboard() {
                     <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
                     <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
                   </div>
+
+                  <div className="flat-card group relative overflow-hidden border-l-4 border-l-info p-6">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-sm font-bold uppercase text-gray-400">Total Jugadores</span>
+                      <Users className="h-5 w-5 text-info" />
+                    </div>
+                    <div className="font-heading text-4xl text-foreground">{playerCount || 0}</div>
+                    <div className="mt-2 text-xs font-bold text-gray-600">EN LA PLANTILLA</div>
+                  </div>
                 </div>
               </section>
 
+              {/*Acessos rápidos */}
               <div>
                 <h2 className="mb-4 font-heading text-lg uppercase text-gray-500">Accesos Rápidos</h2>
                 <div className="grid gap-4 lg:grid-cols-3">
