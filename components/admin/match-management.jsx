@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Pencil, Trash2, Loader2, AlertCircle } from "lucide-react"
-//import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
+import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
   AlertDialog,
