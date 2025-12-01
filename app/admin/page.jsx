@@ -17,6 +17,7 @@ import {
   Trophy, 
   Volleyball, 
   TrendingUp,
+  CircleX
 } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { PlayerManagement } from "@/components/admin/player-management"
@@ -102,6 +103,9 @@ export default function AdminDashboard() {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
+        <button className="w-full flex justify-end md:hidden" onClick={() => setSidebarOpen(false)}>
+          <CircleX className="h-6 w-6" />
+        </button>
         <div className="mb-8 flex h-20 items-center justify-center border-b border-primary text-primary">
           <div className="font-heading text-xl uppercase tracking-wider">Admin Panel</div>
         </div>
@@ -118,7 +122,7 @@ export default function AdminDashboard() {
           <Button className="flat-button bg-secondary text-primary hover:bg-secondary/90 w-full my-10 cursor-pointer py-3">Ver Sitio Público</Button>
         </Link>
 
-        <div className="absolute bottom-16 left-4 right-4">
+        <div className="absolute bottom-18 left-4 right-4">
           <Button
             variant="ghost"
             className="w-full justify-start gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase"
