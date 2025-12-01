@@ -115,12 +115,12 @@ export default function PublicDashboard() {
 
                 <div className="relative z-10 flex w-full flex-col items-center justify-between gap-8 text-center md:flex-row">
                   <div className="flex-1">
-                    <div className="mb-2 font-heading text-3xl font-bold text-secondary md:text-5xl">{teamInfo.name}</div>
+                    <div className="mb-2 font-heading text-3xl font-bold text-secondary md:text-5xl capitalize">{teamInfo.name}</div>
                     <div className="text-sm font-bold uppercase tracking-widest opacity-80">Local</div>
                   </div>
                   <div className="font-heading text-4xl font-bold text-white/40 md:text-6xl">VS</div>
                   <div className="flex-1">
-                    <div className="mb-2 font-heading text-3xl font-bold md:text-5xl">{nextMatch.opponent}</div>
+                    <div className="mb-2 font-heading text-3xl font-bold md:text-5xl capitalize">{nextMatch.opponent}</div>
                     <div className="text-sm font-bold uppercase tracking-widest opacity-80">Visitante</div>
                   </div>
                 </div>
@@ -173,7 +173,7 @@ export default function PublicDashboard() {
 
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
-            {stats.length > 0 ? (
+            {stats ? (
               <div className="bg-white p-4 rounded-2xl">
                 <div className="grid md:grid-cols-2 gap-5">
                   <div className="relative overflow-hidden rounded-xl border-2 border-primary p-6 hover:shadow-lg transition-all">
@@ -346,7 +346,7 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-secondary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">El Club</h2>
             </div>
-            {teamInfo.length > 0 ? (
+            {teamInfo ? (
               <div className="flat-card bg-white">
                 <div className="mb-6 text-center">
                   {teamInfo?.logoUrl ? (
@@ -394,6 +394,11 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-primary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">Convocatoria Oficial</h2>
             </div>
+            {nextMatch && (
+              <p className="text-gray-600 my-4 text-md ml-4">
+                Total <strong>{callUp.filter((p) => p.status === "Convocado").length} convocados</strong> para jugar contra <strong className="capitalize">{nextMatch.opponent}</strong>  - {new Date(nextMatch.date).toLocaleDateString("es-ES")}
+              </p>
+            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               {callUp
@@ -413,6 +418,25 @@ export default function PublicDashboard() {
                   </div>
                 ))}
             </div>
+
+            {/* Resumen de lesionados y suspendidos */}
+            {nextMatch && callUp.filter((p) => p.status === "Convocado").length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-4 text-sm">
+                <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2">
+                  <div className="h-2 w-2 rounded-full bg-destructive"></div>
+                  <span className="font-medium text-destructive">
+                    Jugadores Lesionados: <strong>{callUp.filter((p) => p.status === "Lesionado").length}</strong>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
+                  <div className="h-2 w-2 rounded-full bg-muted-foreground"></div>
+                  <span className="font-medium text-muted-foreground">
+                    Jugadores Suspendidos: <strong>{callUp.filter((p) => p.status === "Suspendido").length}</strong>
+                  </span>
+                </div>
+              </div>
+            )}
+
             {callUp.filter((p) => p.status === "Convocado").length === 0 && (
               <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
                 <p className="text-md font-semibold text-gray-400">Aún no se ha anunciado la convocatoria.</p>
