@@ -217,9 +217,14 @@ export function PlayerManagement() {
               <Users className="h-5 w-5" />
               Gestión de Jugadores
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground my-2">
               Total jugadores en la plantilla: <strong className="capitalize">{players.length}</strong>
             </p>
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 my-2">
+              <p className="text-sm text-blue-800">
+                <strong>💡 Recordatorio:</strong> Si agregas nuevos jugadores y tienes partidos programados, ve a <strong>"Convocatoria"</strong> para actualizar la convocatoria.
+              </p>
+            </div>
           </div>
           <div className="flex gap-2">
             {error && (
