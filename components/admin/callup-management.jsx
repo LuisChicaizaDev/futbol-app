@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Users, Loader2, AlertCircle } from "lucide-react"
+import { Users, Loader2, AlertCircle, CalendarIcon, ListChecks } from "lucide-react"
 import { db } from "@/lib/db"
 import { useToast } from "@/hooks/use-toast"
 
@@ -40,6 +40,9 @@ export function CallUpManagement() {
         const newPlayers = allPlayers.filter(player => !existingPlayerIds.includes(player.id))
         
         if (newPlayers.length > 0) {
+          // Solo mostrar toast si ya existían convocatorias inicialmente
+          const shouldShowToast = callups.length > 0
+          
           // Agregar los nuevos jugadores automáticamente con status "Convocado"
           const newPlayerIds = newPlayers.map(p => p.id)
           await db.createInitialCallUps(match.id, newPlayerIds)
@@ -51,10 +54,13 @@ export function CallUpManagement() {
             status: c.status
           })))
           
-          toast({
-            title: "Nuevos jugadores agregados",
-            description: `${newPlayers.length} jugador(es) nuevo(s) han sido añadidos a la convocatoria.`,
-          })
+          if (shouldShowToast) {
+            toast({
+              variant: "success",
+              title: "Nuevos jugadores agregados",
+              description: `${newPlayers.length} jugador(es) nuevo(s) han sido añadidos a la convocatoria.`,
+            })
+          }
         } else {
           // Si no existen convocatorias, cree las iniciales
           if (callups.length === 0 && allPlayers.length > 0) {
@@ -179,13 +185,13 @@ export function CallUpManagement() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+            <ListChecks className="h-5 w-5" />
             Gestión de Convocatoria
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-            <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <CalendarIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No hay próximo partido</h3>
             <p className="text-muted-foreground">
               Agrega un partido futuro para poder gestionar las convocatorias.
@@ -200,7 +206,7 @@ export function CallUpManagement() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
+          <ListChecks className="h-5 w-5" />
           Gestión de Convocatoria
         </CardTitle>
         <p className="text-sm text-muted-foreground">
