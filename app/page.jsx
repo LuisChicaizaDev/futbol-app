@@ -33,25 +33,7 @@ export default function PublicDashboard() {
         setLastMatches(lastMatchesData)
         const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
         setTopScorers(sortedScorers.slice(0, 6))
-        
-        // Inicializar convocatorias automáticamente si faltan
-        if (matchData && callUpData.length === 0 && playersData.length > 0) {
-          try {
-            // Crear convocatorias para los primeros 18 jugadores
-            const initialPlayerIds = playersData.slice(0, 18).map(p => p.id)
-            await db.createInitialCallUps(matchData.id, initialPlayerIds)
-            
-            // Recargar convocatorias con las nuevas
-            const updatedCallUps = await db.getCallUp()
-            setCallUp(updatedCallUps)
-          } catch (error) {
-            console.error("Error inicializando convocatorias automáticamente:", error)
-            // Si falla, usar convocatorias originales (vacías)
-            setCallUp(callUpData)
-          }
-        } else {
-          setCallUp(callUpData)
-        }
+        setCallUp(callUpData)
         
       } catch (error) {
         console.error("Error loading data:", error)
@@ -380,7 +362,7 @@ export default function PublicDashboard() {
                     </div>
                   ) : (
                     <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
-                      {teamInfo?.name.substring(0, 1).toUpperCase()}
+                      {teamInfo?.name.substring(0, 1).toUpperCase() || 'F'}
                     </div>
                   )}
                   <h3 className="font-heading text-xl uppercase text-primary">{teamInfo?.name}</h3>
