@@ -40,9 +40,6 @@ export function CallUpManagement() {
         const newPlayers = allPlayers.filter(player => !existingPlayerIds.includes(player.id))
         
         if (newPlayers.length > 0) {
-          // Solo mostrar toast si ya existían convocatorias inicialmente
-          const shouldShowToast = callups.length > 0
-          
           // Agregar los nuevos jugadores automáticamente con status "Convocado"
           const newPlayerIds = newPlayers.map(p => p.id)
           await db.createInitialCallUps(match.id, newPlayerIds)
@@ -54,13 +51,13 @@ export function CallUpManagement() {
             status: c.status
           })))
           
-          if (shouldShowToast) {
-            toast({
-              variant: "success",
-              title: "Nuevos jugadores agregados",
-              description: `${newPlayers.length} jugador(es) nuevo(s) han sido añadidos a la convocatoria.`,
-            })
-          }
+          
+          toast({
+            variant: "success",
+            title: "Nuevos jugadores agregados",
+            description: `${newPlayers.length} jugador(es) nuevo(s) han sido añadidos a la convocatoria.`,
+          })
+          
         } else {
           // Si no existen convocatorias, cree las iniciales
           if (callups.length === 0 && allPlayers.length > 0) {
