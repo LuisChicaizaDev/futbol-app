@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [statsLoading, setStatsLoading] = useState(false)
   const router = useRouter()
-  const supabase = createSupabaseBrowserClient()  // Agregar cliente
+  const supabase = useMemo(() => createSupabaseBrowserClient(), []) // Crear cliente Supabase una sola vez Memoizar el cliente
 
   const loadStats = async () => {
     try {
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
       }
     }
     checkAuth()
-  }, [router, supabase])
+  }, [router])
 
   // Recargar estadísticas cada vez que se vuelve a la pestaña "Resumen"
   useEffect(() => {
