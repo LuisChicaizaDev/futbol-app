@@ -17,7 +17,8 @@ import {
   Trophy, 
   Volleyball, 
   TrendingUp,
-  CircleX
+  CircleX,
+  Loader2,
 } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { PlayerManagement } from "@/components/admin/player-management"
@@ -34,17 +35,21 @@ export default function AdminDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [statsLoading, setStatsLoading] = useState(false)
   const router = useRouter()
   const supabase = createSupabaseBrowserClient()  // Agregar cliente
 
   const loadStats = async () => {
     try {
+      setStatsLoading(true)
       const teamStats = await db.getTeamStats()
       const players = await db.getPlayers()
       setStats(teamStats)
       setPlayerCount(players.length)
     } catch (error) {
       console.error("Error loading stats:", error)
+    } finally {
+      setStatsLoading(false)
     }
   }
 
@@ -172,7 +177,8 @@ export default function AdminDashboard() {
                 Controla toda la información del equipo: gestiona jugadores, organiza partidos, actualiza los datos del club y define las convocatorias.
               </p>
               {/* Stats Cards */}
-              <section className="my-6">
+                {/* Stats Cards */}
+                <section className="my-6">
                 <h2 className="mb-4 font-heading text-lg uppercase text-gray-500">Estadísticas</h2>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -181,12 +187,20 @@ export default function AdminDashboard() {
                       <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
                       <Trophy className="h-5 w-5 text-primary" />
                     </div>
-                    <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
-                    <div className="mt-2 flex gap-2 text-xs font-bold">
-                      <span className="text-green-600">{stats?.wins || 0} G</span>
-                      <span className="text-yellow-600">{stats?.draws || 0} E</span>
-                      <span className="text-red-600">{stats?.losses || 0} P</span>
-                    </div>
+                    {statsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
+                        <div className="mt-2 flex gap-2 text-xs font-bold">
+                          <span className="text-green-600">{stats?.wins || 0} G</span>
+                          <span className="text-yellow-600">{stats?.draws || 0} E</span>
+                          <span className="text-red-600">{stats?.losses || 0} P</span>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="flat-card group relative overflow-hidden border-l-4 border-l-secondary p-6">
@@ -194,18 +208,26 @@ export default function AdminDashboard() {
                       <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
                       <Volleyball className="h-5 w-5 text-gray-500"/>
                     </div>
-                    <div className="flex items-end gap-2">
-                      <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
-                      <div className="mb-1 text-sm font-bold text-green-600">A Favor</div>
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
-                      <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
-                      <span className="h-1 w-1 rounded-full bg-gray-300"></span>
-                      <span className="text-accent">
-                        {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
-                        {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
-                      </span>
-                    </div>
+                    {statsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-secondary" />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-end gap-2">
+                          <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
+                          <div className="mb-1 text-sm font-bold text-green-600">A Favor</div>
+                        </div>
+                        <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
+                          <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
+                          <span className="h-1 w-1 rounded-full bg-gray-300"></span>
+                          <span className="text-accent">
+                            {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
+                            {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className="flat-card group relative overflow-hidden border-l-4 border-l-destructive p-6">
@@ -213,8 +235,16 @@ export default function AdminDashboard() {
                       <span className="text-sm font-bold uppercase text-gray-400">Porcentaje Victorias</span>
                       <TrendingUp className="h-5 w-5 text-accent" />
                     </div>
-                    <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
-                    <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
+                    {statsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-destructive" />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
+                        <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
+                      </>
+                    )}
                   </div>
 
                   <div className="flat-card group relative overflow-hidden border-l-4 border-l-info p-6">
@@ -222,8 +252,16 @@ export default function AdminDashboard() {
                       <span className="text-sm font-bold uppercase text-gray-400">Total Jugadores</span>
                       <Users className="h-5 w-5 text-info" />
                     </div>
-                    <div className="font-heading text-4xl text-foreground">{playerCount || 0}</div>
-                    <div className="mt-2 text-xs font-bold text-gray-600">EN LA PLANTILLA</div>
+                    {statsLoading ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-8 w-8 animate-spin text-info" />
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-heading text-4xl text-foreground">{playerCount || 0}</div>
+                        <div className="mt-2 text-xs font-bold text-gray-600">EN LA PLANTILLA</div>
+                      </>
+                    )}
                   </div>
                 </div>
               </section>
