@@ -105,7 +105,7 @@ export default function PublicDashboard() {
                   }}
                 ></div>
 
-                <div className="relative z-10 mb-7 flex items-center gap-2 rounded-full bg-secondary/90 px-4 py-1.5 text-sm text-accent font-bold">
+                <div className="relative z-10 mb-7 flex items-center gap-2 uppercase rounded-full bg-secondary/90 px-4 py-1.5 text-sm text-accent font-bold">
                   <Calendar className="h-4 w-4" />
                   {new Date(nextMatch.date).toLocaleDateString("es-ES", {
                     weekday: "long",
@@ -134,7 +134,7 @@ export default function PublicDashboard() {
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Clock4 className="h-5 w-5 text-secondary"/>
-                    {nextMatch.time} hrs.
+                    {nextMatch.time} h
                   </div>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export default function PublicDashboard() {
                   </div>
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Hora:</span>
-                    <span className="font-bold text-foreground">{nextMatch.time}</span>
+                    <span className="font-bold text-foreground">{nextMatch.time} h</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Concentración:</span>
