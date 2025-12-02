@@ -37,6 +37,17 @@ export default function AdminDashboard() {
   const router = useRouter()
   const supabase = createSupabaseBrowserClient()  // Agregar cliente
 
+  const loadStats = async () => {
+    try {
+      const teamStats = await db.getTeamStats()
+      const players = await db.getPlayers()
+      setStats(teamStats)
+      setPlayerCount(players.length)
+    } catch (error) {
+      console.error("Error loading stats:", error)
+    }
+  }
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -44,18 +55,19 @@ export default function AdminDashboard() {
         router.push("/login") // Si se intenta accede a /admin sin logarse, redirige a /login
       } else {
         setIsAuthenticated(true)
-        const loadStats = async () => {
-          const teamStats = await db.getTeamStats()
-          const players = await db.getPlayers()
-          setStats(teamStats)
-          setPlayerCount(players.length)
-          setLoading(false)
-        }
-        loadStats()
+        await loadStats()
+        setLoading(false)
       }
     }
     checkAuth()
   }, [router, supabase])
+
+  // Recargar estadísticas cada vez que se vuelve a la pestaña "Resumen"
+  useEffect(() => {
+    if (activeTab === "overview" && isAuthenticated) {
+      loadStats()
+    }
+  }, [activeTab, isAuthenticated])
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -65,7 +77,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white">
-        <p className="text-accent">Cargando...</p>
+        <p className="text-accent">Autenticando usuario...</p>
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
       </div>
     )
