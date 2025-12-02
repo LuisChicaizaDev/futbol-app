@@ -248,9 +248,19 @@ export function MatchManagement() {
               <CalendarIcon className="h-5 w-5" />
               Gestión de Partidos
             </CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Partidos jugados: <strong>{sortedMatches.filter(match => match.played).length}</strong>
-            </p>
+            <div className="flex justify-between my-2">
+              <p className="text-sm text-muted-foreground">
+                Total Partidos Jugados: <strong>{sortedMatches.filter(match => match.played).length}</strong>
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Total Partidos Pendientes: <strong>{sortedMatches.filter(match => !match.played).length}</strong>
+              </p>
+            </div>
+            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 my-2">
+              <p className="text-sm text-blue-800">
+                <strong>💡 Recordatorio:</strong> Después de agregar un partido, ve a la sección <strong>"Convocatoria"</strong> para crear la convocatoria inicial.
+              </p>
+            </div>
           </div>
           <div className="flex gap-2">
             {error && (
@@ -289,6 +299,7 @@ export function MatchManagement() {
                   type="time"
                   value={formData.time}
                   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                  required
                   disabled={saving}
                 />
               </div>
