@@ -243,7 +243,7 @@ export default function PublicDashboard() {
                 return (
                   <div key={match.id} className="flat-card flex flex-col justify-between gap-4 hover:border-accent/30">
                     <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-400">
-                      <span>{new Date(match.date).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}</span>
+                      <span>{new Date(match.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</span>
 
                       <span
                         className={`rounded px-2 py-0.5 ${
@@ -261,14 +261,14 @@ export default function PublicDashboard() {
                     {/* Tarjetas resultados partidos */}
                     <div className="grid grid-cols-3 items-center justify-between">
                       <div className="flex flex-col items-center gap-1 text-center">
-                        <span className="font-heading text-lg font-bold text-primary">{teamInfo.name}</span>
+                        <span className="font-heading text-lg font-bold text-primary capitalize">{teamInfo.name}</span>
                         <span className="text-2xl font-bold">{homeScore}</span>
                       </div>
 
                       <span className="text-accent font-bold text-center">vs</span>
 
                       <div className="flex flex-col items-center gap-1 text-center">
-                        <span className="font-heading text-lg font-bold text-gray-500">
+                        <span className="font-heading text-lg font-bold text-gray-500 capitalize">
                           {/* {match.opponent.substring(0, 3).toUpperCase()} */}
                           {match.opponent}
                         </span>
@@ -399,7 +399,12 @@ export default function PublicDashboard() {
             </div>
             {nextMatch && (
               <p className="text-gray-600 my-4 text-md ml-4">
-                Total <strong>{callUp.filter((p) => p.status === "Convocado").length} convocados</strong> para jugar contra <strong className="capitalize">{nextMatch.opponent}</strong>  - {new Date(nextMatch.date).toLocaleDateString("es-ES")}
+                Total <strong>{callUp.filter((p) => p.status === "Convocado").length} convocados</strong> para jugar contra <strong className="capitalize">{nextMatch.opponent}</strong>  - &nbsp;
+                <strong className="uppercase text-xs text-accent"> 
+                  {new Date(nextMatch.date).toLocaleDateString("es-ES", {
+                    weekday: "long", day: "numeric", month: "short", year: "numeric"
+                  })}
+                </strong>
               </p>
             )}
 
