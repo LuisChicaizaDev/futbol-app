@@ -157,7 +157,7 @@ export default function AdminDashboard() {
 
         <Button
           variant="ghost"
-          className="w-full justify-start gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase mt-16"
+          className="w-full justify-end gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase mt-20"
           onClick={handleLogout}
         >
           <LogOut className="h-5 w-5" />
