@@ -178,7 +178,7 @@ export function PlayerManagement() {
   const startEditingStats = (player) => {
     setEditingStats(player.id)
     setTempStats({
-      gamesPlayed: player.gamesPlayed || 0,
+      //gamesPlayed: player.gamesPlayed || 0,
       goals: player.goals || 0,
       assists: player.assists || 0,
       yellowCards: player.yellowCards || 0,
@@ -376,7 +376,7 @@ export function PlayerManagement() {
                 <TableHead>Nombre</TableHead>
                 <TableHead>Posición</TableHead>
                 <TableHead>Edad</TableHead>
-                <TableHead>PJ</TableHead>
+                {/* <TableHead>PJ</TableHead> */}
                 <TableHead>Goles</TableHead>
                 <TableHead>Asist.</TableHead>
                 <TableHead>Tarjetas</TableHead>
@@ -403,7 +403,7 @@ export function PlayerManagement() {
                     <Badge variant="outline">{player.position}</Badge>
                   </TableCell>
                   <TableCell>{player.age}</TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     {editingStats === player.id ? (
                       <div className="flex items-center gap-1">
                         <Button 
@@ -427,7 +427,7 @@ export function PlayerManagement() {
                     ) : (
                       player.gamesPlayed
                     )}
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     {editingStats === player.id ? (
                       <div className="flex items-center gap-1">
