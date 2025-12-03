@@ -19,6 +19,7 @@ import {
   TrendingUp,
   X,
   Loader2,
+  SquareArrowOutUpRight
 } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { PlayerManagement } from "@/components/admin/player-management"
@@ -152,7 +153,9 @@ export default function AdminDashboard() {
         </nav>
 
         <Link href="/" target="_blank">
-          <Button className="flat-button bg-secondary text-primary hover:bg-secondary/90 w-full my-10 cursor-pointer py-3">Ver Sitio Público</Button>
+          <Button className="bg-gray-300 text-accent hover:bg-gray-200 w-full my-12 cursor-pointer py-5 uppercase font-semibold">
+            Ver Sitio Público <SquareArrowOutUpRight  className="h-6 w-6" />
+          </Button>
         </Link>
 
         <Button
