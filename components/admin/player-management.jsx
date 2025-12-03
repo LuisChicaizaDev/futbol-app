@@ -534,19 +534,19 @@ export function PlayerManagement() {
                     <div className="flex justify-end gap-2">
                       {editingStats === player.id ? (
                         <>
-                          <Button size="sm" onClick={saveStats} disabled={saving}>
+                          <Button title="Guardar" size="sm" onClick={saveStats} disabled={saving}>
                             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                           </Button>
-                          <Button size="sm" variant="outline" onClick={cancelEditing} disabled={saving}>
+                          <Button title="Cerrar" size="sm" variant="outline" onClick={cancelEditing} disabled={saving}>
                             <X className="h-4 w-4" />
                           </Button>
                         </>
                       ) : (
                         <>
-                          <Button size="sm" variant="ghost" onClick={() => handleEdit(player)}>
+                          <Button title="Editar Jugador" size="sm" variant="ghost" onClick={() => handleEdit(player)}>
                             <Pencil className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/10" 
+                          <Button title="Editar Estadísticas" size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/10" 
                             onClick={() => startEditingStats(player)}
                           >
                             <TrendingUp className="h-4 w-4" />
@@ -554,6 +554,7 @@ export function PlayerManagement() {
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
+                                title="Eliminar Jugador"
                                 size="sm"
                                 variant="ghost"
                                 className="text-destructive hover:text-destructive hover:bg-destructive/10"
@@ -566,7 +567,7 @@ export function PlayerManagement() {
                               <AlertDialogHeader>
                                 <AlertDialogTitle>¿Eliminar jugador?</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Esta acción eliminará a <strong>{player.name}</strong> de la plantilla permanentemente.
+                                  Esta acción eliminará a <strong className="capitalize">{player.name}</strong> de la plantilla permanentemente.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
