@@ -17,7 +17,7 @@ import {
   Trophy, 
   Volleyball, 
   TrendingUp,
-  CircleX,
+  X,
   Loader2,
 } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
@@ -32,6 +32,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("overview")
   const [stats, setStats] = useState(null)
   const [playerCount, setPlayerCount] = useState(0)
+  const [teamInfo, setTeamInfo] = useState(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -44,8 +45,10 @@ export default function AdminDashboard() {
       setStatsLoading(true)
       const teamStats = await db.getTeamStats()
       const players = await db.getPlayers()
+      const teamInfoData = await db.getTeamInfo();
       setStats(teamStats)
       setPlayerCount(players.length)
+      setTeamInfo(teamInfoData)
     } catch (error) {
       console.error("Error loading stats:", error)
     } finally {
@@ -111,20 +114,33 @@ export default function AdminDashboard() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-40 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r border-gray-200 bg-white p-4 transition-transform duration-200 ease-in-out md:static md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r border-gray-200 bg-white p-4 pt-5 transition-transform duration-200 ease-in-out lg:static lg:translate-x-0 overflow-y-auto ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <button className="w-full flex justify-end md:hidden" onClick={() => setSidebarOpen(false)}>
-          <CircleX className="h-6 w-6" />
+        <button className="w-full flex flex-col items-end lg:hidden mb-4 text-xs hover:text-gray-600 transition-all " onClick={() => setSidebarOpen(false)}>
+          <X className="h-6 w-6" /> Cerrar
         </button>
-        <div className="mb-8 flex h-20 items-center justify-center border-b border-primary text-primary">
-          <div className="font-heading text-xl uppercase tracking-wider">Admin Panel</div>
+        <div className="mb-8 flex h-20 items-center justify-center bg-accent rounded-md text-white">
+          {teamInfo?.logoUrl ? (
+            <div className="h-16 w-16 overflow-hidden">
+              <img
+                src={teamInfo.logoUrl}
+                alt={teamInfo.name}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : (
+            <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
+              {teamInfo?.name?.substring(0, 1).toUpperCase() || 'A'}
+            </div>
+          )}
+          <p className="font-heading text-xl uppercase tracking-wider">Admin Panel</p>
         </div>
 
         <nav className="flex flex-col gap-2">
@@ -139,33 +155,33 @@ export default function AdminDashboard() {
           <Button className="flat-button bg-secondary text-primary hover:bg-secondary/90 w-full my-10 cursor-pointer py-3">Ver Sitio Público</Button>
         </Link>
 
-        <div className="absolute bottom-18 left-4 right-4">
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase"
-            onClick={handleLogout}
-          >
-            <LogOut className="h-5 w-5" />
-            Salir
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase mt-16"
+          onClick={handleLogout}
+        >
+          <LogOut className="h-5 w-5" />
+          Salir
+        </Button>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
         {/* Top Bar */}
         <header className="sticky top-0 z-30 flex h-25 items-center justify-between border-b border-gray-200 bg-white/80 px-8 backdrop-blur-md">
-          <div className="flex items-center gap-4">
-            <button className="md:hidden" onClick={() => setSidebarOpen(true)}>
-              <Menu className="h-6 w-6" />
-            </button>
-            <div className="font-heading text-xl uppercase text-foreground">
-              {activeTab === "overview" && "Vista General"}
-              {activeTab === "players" && "Gestión de Plantilla"}
-              {activeTab === "matches" && "Calendario y Resultados"}
-              {activeTab === "callups" && "Gestión de Convocatoria"}
-              {activeTab === "info" && "Configuración del Equipo"}
+          <div className="flex justify-between items-center gap-4 w-full">
+            <div className="border-l-3 border-l-accent  pl-4">
+              <h2 className="font-heading text-xl uppercase text-foreground">
+                {activeTab === "overview" && "Vista General"}
+                {activeTab === "players" && "Gestión de Plantilla"}
+                {activeTab === "matches" && "Calendario y Resultados"}
+                {activeTab === "callups" && "Gestión de Convocatoria"}
+                {activeTab === "info" && "Configuración del Equipo"}
+              </h2>
             </div>
+            <button className="flex flex-col items-center lg:hidden text-xs hover:text-gray-600 transition-all " onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-6 w-6" /> Menú
+            </button>
           </div>
         </header>
 
