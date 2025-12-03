@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Trash2, Loader2, Users } from "lucide-react"
+import { Plus, Pencil, Trash2, Loader2, Users, Minus, Save, X, TrendingUp } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -37,6 +37,8 @@ export function PlayerManagement() {
     position: "Delantero",
     age: "",
   })
+  const [editingStats, setEditingStats] = useState(null)
+  const [tempStats, setTempStats] = useState({})
 
   const loadPlayers = useCallback(async () => {
     try {
@@ -173,6 +175,57 @@ export function PlayerManagement() {
     setFormData({ name: "", number: "", position: "Delantero", age: "" })
   }
 
+  const startEditingStats = (player) => {
+    setEditingStats(player.id)
+    setTempStats({
+      gamesPlayed: player.gamesPlayed || 0,
+      goals: player.goals || 0,
+      assists: player.assists || 0,
+      yellowCards: player.yellowCards || 0,
+      redCards: player.redCards || 0,
+    })
+  }
+
+  const updateStat = (field, increment) => {
+    setTempStats(prev => ({
+      ...prev,
+      [field]: Math.max(0, prev[field] + increment)
+    }))
+  }
+
+  const saveStats = async () => {
+    try {
+      setSaving(true)
+      await db.updatePlayerStats(editingStats, tempStats)
+      
+      // Actualizar estado local
+      setPlayers(players.map(p => 
+        p.id === editingStats ? { ...p, ...tempStats } : p
+      ))
+      
+      setEditingStats(null)
+      toast({
+        variant: "success",
+        title: "Estadísticas actualizadas",
+        description: "Los datos del jugador han sido guardados.",
+      })
+    } catch (error) {
+      console.error(error)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se pudieron guardar las estadísticas.",
+      })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const cancelEditing = () => {
+    setEditingStats(null)
+    setTempStats({})
+  }
+
   if (loading) {
     return (
       <Card>
@@ -222,7 +275,7 @@ export function PlayerManagement() {
             </p>
             <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 my-2">
               <p className="text-sm text-blue-800">
-                <strong>💡 Recordatorio:</strong> Si agregas nuevos jugadores y tienes partidos programados, ve a <strong>"Convocatoria"</strong> para actualizar la convocatoria.
+                <strong>💡 Recordatorio:</strong> Si agregas nuevos jugadores y tienes partidos ya programados, ve a <strong>"Convocatoria"</strong> para actualizar la convocatoria.
               </p>
             </div>
           </div>
@@ -326,6 +379,7 @@ export function PlayerManagement() {
                 <TableHead>PJ</TableHead>
                 <TableHead>Goles</TableHead>
                 <TableHead>Asist.</TableHead>
+                <TableHead>Tarjetas</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -349,51 +403,193 @@ export function PlayerManagement() {
                     <Badge variant="outline">{player.position}</Badge>
                   </TableCell>
                   <TableCell>{player.age}</TableCell>
-                  <TableCell>{player.gamesPlayed}</TableCell>
-                  <TableCell>{player.goals}</TableCell>
-                  <TableCell>{player.assists}</TableCell>
+                  <TableCell>
+                    {editingStats === player.id ? (
+                      <div className="flex items-center gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('gamesPlayed', -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center font-bold">{tempStats.gamesPlayed}</span>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('gamesPlayed', 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      player.gamesPlayed
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingStats === player.id ? (
+                      <div className="flex items-center gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('goals', -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center font-bold text-green-600">{tempStats.goals}</span>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('goals', 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <span className="text-green-600 font-bold">{player.goals}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingStats === player.id ? (
+                      <div className="flex items-center gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('assists', -1)}
+                        >
+                          <Minus className="h-3 w-3" />
+                        </Button>
+                        <span className="w-8 text-center font-bold text-blue-600">{tempStats.assists}</span>
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => updateStat('assists', 1)}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <span className="text-blue-600 font-bold">{player.assists}</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingStats === player.id ? (
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-yellow-600">A:</span>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="h-6 w-6 p-0" 
+                            onClick={() => updateStat('yellowCards', -1)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-6 text-center font-bold text-yellow-600">{tempStats.yellowCards}</span>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="h-6 w-6 p-0" 
+                            onClick={() => updateStat('yellowCards', 1)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-red-600">R:</span>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="h-6 w-6 p-0" 
+                            onClick={() => updateStat('redCards', -1)}
+                          >
+                            <Minus className="h-3 w-3" />
+                          </Button>
+                          <span className="w-6 text-center font-bold text-red-600">{tempStats.redCards}</span>
+                          <Button 
+                            size="sm" 
+                            variant="outline" 
+                            className="h-6 w-6 p-0" 
+                            onClick={() => updateStat('redCards', 1)}
+                          >
+                            <Plus className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-sm">
+                        <span className="text-yellow-600">{player.yellowCards}A</span>
+                        <span className="mx-1">/</span>
+                        <span className="text-red-600">{player.redCards}R</span>
+                      </div>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="ghost" onClick={() => handleEdit(player)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            disabled={saving}
-                          >
-                            <Trash2 className="h-4 w-4" />
+                      {editingStats === player.id ? (
+                        <>
+                          <Button size="sm" onClick={saveStats} disabled={saving}>
+                            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                           </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>¿Eliminar jugador?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Esta acción eliminará a <strong>{player.name}</strong> de la plantilla permanentemente.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(player.id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                              disabled={saving}
-                            >
-                              {saving ? (
-                                <>
-                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                  Eliminando...
-                                </>
-                              ) : (
-                                "Eliminar"
-                              )}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                          <Button size="sm" variant="outline" onClick={cancelEditing} disabled={saving}>
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button size="sm" variant="ghost" onClick={() => handleEdit(player)}>
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="ghost" className="text-primary hover:text-primary hover:bg-primary/10" 
+                            onClick={() => startEditingStats(player)}
+                          >
+                            <TrendingUp className="h-4 w-4" />
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                disabled={saving}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>¿Eliminar jugador?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Esta acción eliminará a <strong>{player.name}</strong> de la plantilla permanentemente.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(player.id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  disabled={saving}
+                                >
+                                  {saving ? (
+                                    <>
+                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                      Eliminando...
+                                    </>
+                                  ) : (
+                                    "Eliminar"
+                                  )}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
