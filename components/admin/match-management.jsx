@@ -467,19 +467,20 @@ export function MatchManagement() {
                     </TableCell>
                     <TableCell>{match.played ? `${match.goalsFor} - ${match.goalsAgainst}` : "-"}</TableCell>
                     <TableCell>
-                      <Badge variant={match.played ? "default" : "outline"}>
+                      <Badge variant={match.played ? "custom" : "outline"}>
                         {match.played ? "Jugado" : "Pendiente"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Button size="sm" variant="ghost" onClick={() => handleEdit(match)} disabled={saving}>
+                        <Button title="Editar Partido" size="sm" variant="ghost" onClick={() => handleEdit(match)} disabled={saving}>
                           <Pencil className="h-4 w-4" />
                         </Button>
 
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
+                              title="Eliminar Partido"
                               size="sm"
                               variant="ghost"
                               className="text-destructive hover:text-destructive hover:bg-destructive/10"
@@ -492,7 +493,7 @@ export function MatchManagement() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>¿Eliminar partido?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Esta acción eliminará el partido contra <strong>{match.opponent}</strong> permanentemente.
+                                Esta acción eliminará el partido contra <strong className="capitalize">{match.opponent}</strong> permanentemente.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
