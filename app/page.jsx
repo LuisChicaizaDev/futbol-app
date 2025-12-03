@@ -60,15 +60,15 @@ export default function PublicDashboard() {
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3">
             {teamInfo?.logoUrl ? (
-                <div className="mx-auto h-16 w-16 overflow-hidden items-center justify-center rounded-2xl">
+                <div className="mx-auto h-16 w-16 overflow-hidden items-center justify-center rounded-md">
                   <img
                     src={teamInfo.logoUrl}
                     alt={teamInfo.name}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-cover"
                   />
                 </div>
               ) : (
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-4xl font-bold text-white">
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-white">
                   {teamInfo?.name.substring(0, 1).toUpperCase() || 'F'}
                 </div>
               )}

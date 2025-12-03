@@ -126,9 +126,9 @@ export default function AdminDashboard() {
         <button className="w-full flex flex-col items-end lg:hidden mb-4 text-xs hover:text-gray-600 transition-all " onClick={() => setSidebarOpen(false)}>
           <X className="h-6 w-6" /> Cerrar
         </button>
-        <div className="mb-8 flex h-20 items-center justify-center bg-accent rounded-md text-white">
+        <div className="mb-8 flex h-20 items-center justify-center gap-2">
           {teamInfo?.logoUrl ? (
-            <div className="h-16 w-16 overflow-hidden">
+            <div className="h-14 w-14 rounded-md overflow-hidden">
               <img
                 src={teamInfo.logoUrl}
                 alt={teamInfo.name}
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
               />
             </div>
           ) : (
-            <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary text-5xl font-bold text-white">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-2xl font-bold text-white">
               {teamInfo?.name?.substring(0, 1).toUpperCase() || 'A'}
             </div>
           )}
