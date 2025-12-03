@@ -324,7 +324,7 @@ export default function PublicDashboard() {
                       </div>
                     </div>
                     <div className="flex justify-between text-xs font-bold text-gray-500">
-                      <span>Partidos: {player.gamesPlayed ?? 0}</span>
+                      {/* <span>Partidos: {player.gamesPlayed ?? 0}</span> */}
                       <span>Tarjetas: {player.yellowCards ?? 0}A / {player.redCards ?? 0}R</span>
                     </div>
                   </div>
