@@ -14,12 +14,13 @@ import {
   PlusCircle,
   UserPlus,
   ListChecks,
-  Trophy, 
-  Volleyball, 
+  Trophy,
+  Volleyball,
   TrendingUp,
   X,
   Loader2,
-  SquareArrowOutUpRight
+  SquareArrowOutUpRight,
+  AlertCircle
 } from "lucide-react"
 import { db } from "@/lib/db" // Obtenemos los datos del backend con Supabase
 import { PlayerManagement } from "@/components/admin/player-management"
@@ -27,6 +28,7 @@ import { MatchManagement } from "@/components/admin/match-management"
 import { CallUpManagement } from "@/components/admin/callup-management"
 import { TeamInfoManagement } from "@/components/admin/team-info-management"
 import { createSupabaseBrowserClient } from "@/lib/supabase/client"  // import Supabase Auth
+import { useToast } from "@/hooks/use-toast"
 
 export default function AdminDashboard() {
 
@@ -38,12 +40,15 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [statsLoading, setStatsLoading] = useState(false)
+  const [statsError, setStatsError] = useState(null)
+  const { toast } = useToast()
   const router = useRouter()
   const supabase = useMemo(() => createSupabaseBrowserClient(), []) // Crear cliente Supabase una sola vez Memoizar el cliente
 
   const loadStats = async () => {
     try {
       setStatsLoading(true)
+      setStatsError(null) // Limpiar error anterior
       const teamStats = await db.getTeamStats()
       const players = await db.getPlayers()
       const teamInfoData = await db.getTeamInfo();
@@ -52,6 +57,12 @@ export default function AdminDashboard() {
       setTeamInfo(teamInfoData)
     } catch (error) {
       console.error("Error loading stats:", error)
+      setStatsError("No pudimos cargar las estadísticas del equipo. Verifica tu conexión e intenta nuevamente.")
+      toast({
+        variant: "destructive",
+        title: "Error al cargar",
+        description: "No pudimos cargar las estadísticas del equipo. Intenta nuevamente.",
+      })
     } finally {
       setStatsLoading(false)
     }
@@ -195,8 +206,25 @@ export default function AdminDashboard() {
               <p>
                 Controla toda la información del equipo: gestiona jugadores, organiza partidos, actualiza los datos del club y define las convocatorias.
               </p>
+
+              {/* Stats Error Display */}
+              {statsError && (
+                <section className="my-6">
+                  <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+                    <div className="text-destructive mb-4">
+                      <AlertCircle className="mx-auto h-12 w-12" />
+                    </div>
+                    <h3 className="text-lg font-medium text-destructive mb-2">Error al cargar estadísticas</h3>
+                    <p className="text-muted-foreground mb-4">{statsError}</p>
+                    <Button onClick={loadStats} variant="outline">
+                      Intentar nuevamente
+                    </Button>
+                  </div>
+                </section>
+              )}
+
               {/* Stats Cards */}
-                {/* Stats Cards */}
+              {!statsError && (
                 <section className="my-6">
                 <h2 className="mb-4 font-heading text-lg uppercase text-gray-500">Estadísticas</h2>
 
@@ -283,7 +311,8 @@ export default function AdminDashboard() {
                     )}
                   </div>
                 </div>
-              </section>
+                </section>
+              )}
 
               {/*Acessos rápidos */}
               <div>
