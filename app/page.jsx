@@ -207,14 +207,14 @@ export default function PublicDashboard() {
 
                     {/* Empates */}
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-bold text-gray-600">Empates</span>
-                      <div className="relative w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <span className="text-xs font-bold text-yellow-600">Empates</span>
+                      <div className="relative w-16 h-2 bg-yellow-200 rounded-full overflow-hidden">
                         <div
-                          className="absolute left-0 top-0 h-full bg-gray-600 rounded-full transition-all duration-500"
+                          className="absolute left-0 top-0 h-full bg-yellow-600 rounded-full transition-all duration-500"
                           style={{ width: `${stats?.totalGames ? ((stats.draws || 0) / stats.totalGames) * 100 : 0}%` }}
                         ></div>
                       </div>
-                      <span className="text-xs font-bold text-gray-600 min-w-[2ch]">{stats?.draws || 0}</span>
+                      <span className="text-xs font-bold text-yellow-600 min-w-[2ch]">{stats?.draws || 0}</span>
                     </div>
                   
                     {/* Derrotas */}
@@ -368,7 +368,7 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-accent"></div>
               <h2 className="font-heading text-2xl uppercase text-primary md:text-3xl">Últimos Resultados</h2>
             </div>
-            <p className="text-gray-600 my-4 text-md ml-4">Últimos 10 partidos jugados</p>
+            <p className="text-gray-600 my-4 text-md ml-4">Últimos <strong>{lastMatches.length}</strong> partidos jugados</p>
 
             <div className="grid md:grid-cols-2 gap-4">
               {lastMatches.map((match) => {
