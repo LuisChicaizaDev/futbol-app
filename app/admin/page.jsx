@@ -153,14 +153,14 @@ export default function AdminDashboard() {
         </nav>
 
         <Link href="/" target="_blank">
-          <Button className="bg-gray-300 text-accent hover:bg-gray-200 w-full my-12 cursor-pointer py-5 uppercase font-semibold">
+          <Button variant="outline" className="w-full my-12 cursor-pointer py-5 uppercase font-semibold">
             Ver Sitio Público <SquareArrowOutUpRight  className="h-6 w-6" />
           </Button>
         </Link>
 
         <Button
           variant="ghost"
-          className="w-full justify-end gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase mt-20"
+          className="justify-start gap-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-bold uppercase mt-20"
           onClick={handleLogout}
         >
           <LogOut className="h-5 w-5" />
