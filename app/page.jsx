@@ -154,7 +154,7 @@ export default function PublicDashboard() {
                 <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-2 border-t px-6 pt-4 text-md font-semibold backdrop-blur-sm">
                   <div className="flex items-center justify-center gap-2">
                     <MapPin className="h-5 w-5 text-secondary" />
-                    {nextMatch.location === "Local" ? teamInfo?.stadium : "Cancha Visitante"}
+                    {nextMatch.location === "Local" ? teamInfo?.stadium || "Sin estadio" : "Cancha Visitante"}
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Clock4 className="h-5 w-5 text-secondary"/>
@@ -167,8 +167,8 @@ export default function PublicDashboard() {
                 <h3 className="mb-6 font-heading text-xl uppercase text-primary border-b-2 border-b-primary pb-4">Detalles del Partido</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
-                    <span className="font-bold text-gray-500">Competición:</span>
-                    <span className="font-bold text-foreground">Liga Barrial la México</span>
+                    <span className="font-bold text-gray-500">Estadio:</span>
+                    <span className="font-bold text-foreground">{teamInfo?.stadium || "Sin estadio"}</span>
                   </div>
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Hora:</span>
@@ -587,8 +587,12 @@ export default function PublicDashboard() {
                     <span className="font-bold text-foreground capitalize">{teamInfo?.coach}</span>
                   </div>
                   <div className="flex justify-between rounded-lg bg-gray-50 p-3">
-                    <span className="font-bold text-gray-500">Sede</span>
+                    <span className="font-bold text-gray-500">Ciudad</span>
                     <span className="font-bold text-foreground capitalize">{teamInfo?.city}</span>
+                  </div>
+                  <div className="flex justify-between rounded-lg bg-gray-50 p-3">
+                    <span className="font-bold text-gray-500">Estadio</span>
+                    <span className="font-bold text-foreground capitalize">{teamInfo?.stadium}</span>
                   </div>
                 </div>
               </div>
