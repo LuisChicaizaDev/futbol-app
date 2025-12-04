@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User } from "lucide-react"
 import { db } from "@/lib/db"
+import { Progress } from "@/components/ui/progress"
 
 export default function PublicDashboard() {
   const [nextMatch, setNextMatch] = useState(null)
@@ -183,11 +184,44 @@ export default function PublicDashboard() {
                     <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
                     <Trophy className="size-7 text-primary" />
                   </div>
-                  <div className="font-heading text-4xl text-foreground">{stats?.totalGames || 0}</div>
-                  <div className="mt-2 flex gap-2 text-xs font-bold">
-                    <span className="text-green-600">{stats?.wins || 0} G</span>
-                    <span className="text-yellow-600">{stats?.draws || 0} E</span>
-                    <span className="text-red-600">{stats?.losses || 0} P</span>
+                  <div className="font-heading text-4xl text-foreground mb-3">{stats?.totalGames || 0}</div>
+
+                  <div className="space-y-3">
+                    {/* Victorias */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-green-600">Victorias</span>
+                      <div className="relative w-16 h-2 bg-green-200 rounded-full overflow-hidden">
+                        <div
+                          className="absolute left-0 top-0 h-full bg-green-600 rounded-full transition-all duration-500"
+                          style={{ width: `${stats?.totalGames ? ((stats.wins || 0) / stats.totalGames) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs font-bold text-green-600 min-w-[2ch]">{stats?.wins || 0}</span>
+                    </div>
+
+                    {/* Empates */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-gray-600">Empates</span>
+                      <div className="relative w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="absolute left-0 top-0 h-full bg-gray-600 rounded-full transition-all duration-500"
+                          style={{ width: `${stats?.totalGames ? ((stats.draws || 0) / stats.totalGames) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs font-bold text-gray-600 min-w-[2ch]">{stats?.draws || 0}</span>
+                    </div>
+                  
+                    {/* Derrotas */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-bold text-red-600">Derrotas</span>
+                      <div className="relative w-16 h-2 bg-red-200 rounded-full overflow-hidden">
+                        <div
+                          className="absolute left-0 top-0 h-full bg-red-500 rounded-full transition-all duration-500"
+                          style={{ width: `${stats?.totalGames ? ((stats.losses || 0) / stats.totalGames) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-xs font-bold text-red-600 min-w-[2ch]">{stats?.losses || 0}</span>
+                    </div>
                   </div>
                 </div>
 
