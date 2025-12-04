@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4 } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User } from "lucide-react"
 import { db } from "@/lib/db"
 
 export default function PublicDashboard() {
@@ -80,7 +79,9 @@ export default function PublicDashboard() {
             </div>
           </div>
           <Link href="/login">
-            <Button className="flat-button bg-primary text-white hover:bg-primary/90">Admin</Button>
+            <button className="flex items-center gap-1 p-2 rounded-md bg-primary text-white hover:bg-primary/90 uppercase font-semibold text-sm">
+              <User className="size-5" /> Admin
+            </button>
           </Link>
         </div>
       </header>
