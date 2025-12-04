@@ -226,21 +226,46 @@ export default function PublicDashboard() {
                 </div>
 
                 <div className="flat-card relative overflow-hidden rounded-xl">
-                  <div className="mb-2 flex items-center justify-between">
+                  <div className="mb-4 flex items-center justify-between">
                     <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
                     <Goal className="size-7 text-gray-400"/>
                   </div>
-                  <div className="flex items-end gap-2">
-                    <div className="font-heading text-4xl text-foreground">{stats?.goalsFor || 0}</div>
-                    <div className="mb-1 text-sm font-bold text-green-600">A Favor</div>
+
+                  {/* Sección principal con comparación visual */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    {/* Goles a Favor */}
+                    <div className="text-center p-3 rounded-lg bg-green-50/80 border border-green-100">
+                      <div className="font-heading text-3xl font-bold text-green-600 mb-1">
+                        {stats?.goalsFor || 0}
+                      </div>
+                      <div className="text-xs font-bold text-green-600 uppercase tracking-wide">
+                        A Favor
+                      </div>
+                    </div>
+
+                    {/* Goles en Contra */}
+                    <div className="text-center p-3 rounded-lg bg-red-50/80 border border-red-100">
+                      <div className="font-heading text-3xl font-bold text-red-600 mb-1">
+                        {stats?.goalsAgainst || 0}
+                      </div>
+                      <div className="text-xs font-bold text-red-600 uppercase tracking-wide">
+                        En Contra
+                      </div>
+                    </div>
                   </div>
-                  <div className="mt-2 flex items-center gap-2 text-xs font-bold text-gray-400">
-                    <span className="text-red-600">{stats?.goalsAgainst || 0} En Contra</span>
-                    <span className="h-1 w-1 rounded-full bg-gray-300"></span>
-                    <span className="text-accent">
-                      {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
-                      {stats ? stats.goalsFor - stats.goalsAgainst : 0} Dif
-                    </span>
+
+                  {/* Diferencia destacada */}
+                  <div className="text-center p-3 border-dashed border-t-2">
+                    <div className="flex justify-between">
+                      <div className="text-sm font-bold text-accent mb-1">Diferencia</div>
+                      <div className={`text-md font-bold ${stats && stats.goalsFor - stats.goalsAgainst > 0 ? 'text-green-600' : stats && stats.goalsFor - stats.goalsAgainst < 0 ? 'text-red-600' : 'text-gray-600'}`}>
+                        {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
+                        {stats ? stats.goalsFor - stats.goalsAgainst : 0}
+                      </div>
+                    </div>
+                    <div className="text-xs text-gray-600 font-medium mt-1">
+                      {stats && stats.goalsFor - stats.goalsAgainst > 0 ? 'Balance positivo' : stats && stats.goalsFor - stats.goalsAgainst < 0 ? 'Balance negativo' : 'Balance equilibrado'}
+                    </div>
                   </div>
                 </div>
 
