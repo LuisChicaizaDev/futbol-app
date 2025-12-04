@@ -23,7 +23,7 @@ export default function PublicDashboard() {
           db.getTeamStats(),
           db.getTeamInfo(),
           db.getCallUp(),
-          db.getLastMatches(8),
+          db.getLastMatches(10),
           db.getPlayers(),
         ])
         
@@ -368,7 +368,7 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-accent"></div>
               <h2 className="font-heading text-2xl uppercase text-primary md:text-3xl">Últimos Resultados</h2>
             </div>
-            <p className="text-gray-600 my-4 text-md ml-4">Últimos 8 partidos</p>
+            <p className="text-gray-600 my-4 text-md ml-4">Últimos 10 partidos jugados</p>
 
             <div className="grid md:grid-cols-2 gap-4">
               {lastMatches.map((match) => {
