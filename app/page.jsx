@@ -200,7 +200,7 @@ export default function PublicDashboard() {
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
             {stats ? (
-              <div className="grid md:grid-cols-1 gap-5">
+              <div className="grid sm:grid-cols-2 md:grid-cols-1 gap-5">
                 {/*Partidos*/}
                 <div className="flat-card relative overflow-hidden rounded-xl">
                   <div className="mb-4 flex items-center justify-between">
