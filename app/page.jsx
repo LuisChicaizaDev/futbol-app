@@ -392,7 +392,7 @@ export default function PublicDashboard() {
             </div>
             <p className="text-gray-600 my-4 text-md ml-4">Últimos <strong>{lastMatches.length}</strong> partidos jugados</p>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-6">
               {lastMatches.map((match) => {
                 const homeScore =
                   typeof match.goalsFor === "number" ? match.goalsFor : "-"
@@ -400,47 +400,96 @@ export default function PublicDashboard() {
                   typeof match.goalsAgainst === "number" ? match.goalsAgainst : "-"
 
                 return (
-                  <div key={match.id} className="flat-card flex flex-col justify-between gap-4 hover:border-accent/30">
-                    <div className="flex items-center justify-between text-xs font-bold uppercase text-gray-400">
-                      <span>{new Date(match.date).toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" })}</span>
+                  <div 
+                    key={match.id} 
+                    className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 
+                    hover:shadow-lg hover:border-accent/30"
+                  >
+                    {/* Header con fecha y resultado */}
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="size-4" />
+                          <span className="font-medium">
+                            {new Date(match.date).toLocaleDateString("es-ES", {
+                              weekday: "short",
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric"
+                            })}
+                          </span>
+                        </div>
+                      </div>
 
-                      <span
-                        className={`rounded px-2 py-0.5 ${
-                          match.result === "Victoria"
-                            ? "bg-green-100 text-green-700"
-                            : match.result === "Empate"
-                              ? "bg-yellow-100 text-yellow-700"
-                              : "bg-red-100 text-red-700"
-                        }`}
-                      >
+                      {/* Badge de resultado */}
+                      <div className={`inline-flex items-center px-2 py-1 rounded-sm text-xs font-semibold border ${
+                        match.result === "Victoria"
+                          ? "bg-green-50 text-green-700 border-green-300"
+                          : match.result === "Empate"
+                            ? "bg-yellow-50 text-yellow-700 border-yellow-300"
+                            : "bg-red-50 text-red-700 border-red-300"
+                      }`}>
                         {match.result}
-                      </span>
-                    </div>
-
-                    {/* Tarjetas resultados partidos */}
-                    <div className="grid grid-cols-3 items-center justify-between">
-                      <div className="flex flex-col items-center gap-1 text-center">
-                        <span className="font-heading text-lg font-bold text-primary capitalize">{teamInfo.name}</span>
-                        <span className="text-2xl font-bold">{homeScore}</span>
-                      </div>
-
-                      <span className="text-accent font-bold text-center">vs</span>
-
-                      <div className="flex flex-col items-center gap-1 text-center">
-                        <span className="font-heading text-lg font-bold text-gray-500 capitalize">
-                          {/* {match.opponent.substring(0, 3).toUpperCase()} */}
-                          {match.opponent}
-                        </span>
-                        <span className="text-2xl font-bold">{rivalScore}</span>
                       </div>
                     </div>
-                    <div className="text-center text-xs font-bold text-gray-400 uppercase">{match.location}</div>
+
+                    {/* Marcador principal */}
+                    <div className="flex items-center justify-between mb-4">
+                      {/* Equipo local */}
+                      <div className="flex-1 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className="text-sm font-bold text-primary uppercase tracking-wide">
+                            {teamInfo.name}
+                          </span>
+                        </div>
+                        <div className="text-4xl font-bold text-primary">{homeScore}</div>
+                      </div>
+
+                      {/* VS */}
+                      <div className="flex flex-col items-center mx-4">
+                        <div className="text-accent font-bold text-lg mb-1">VS</div>
+                        <div className="w-8 h-px bg-accent"></div>
+                      </div>
+
+                      {/* Equipo visitante */}
+                      <div className="flex-1 text-center">
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className="text-sm font-bold text-gray-600 uppercase tracking-wide">
+                            {match.opponent}
+                          </span>
+                        </div>
+                        <div className="text-4xl font-bold text-gray-600">{rivalScore}</div>
+                      </div>
+                    </div>
+
+                    {/* Información adicional */}
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex items-center justify-between gap-4 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="size-3" />
+                          <span className="capitalize font-medium">{match.location}</span>
+                        </div>
+                        {match.competition && (
+                          <div className="flex items-center gap-1">
+                            <Trophy className="size-3" />
+                            <span className="font-medium">{match.competition}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Efecto hover sutil */}
+                    <div className="absolute inset-0 bg-linear-to-br from-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                   </div>
                 )
               })}
               {lastMatches.length === 0 && (
-                <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
-                  <p className="text-md font-semibold text-gray-400">No hay partidos jugados registrados.</p>
+                <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-16 text-center text-gray-500">
+                  <div className="mb-4">
+                    <Calendar className="mx-auto h-12 w-12 text-gray-300" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-400 mb-2">Sin partidos registrados</h3>
+                  <p className="text-sm text-gray-500">Los resultados aparecerán aquí una vez que se jueguen partidos.</p>
                 </div>
               )}
             </div>
