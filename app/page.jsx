@@ -178,14 +178,20 @@ export default function PublicDashboard() {
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
             {stats ? (
-              <div className="grid md:grid-cols-2 gap-5">
+              <div className="grid md:grid-cols-1 gap-5">
+                {/*Partidos*/}
                 <div className="flat-card relative overflow-hidden rounded-xl">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Partidos</span>
-                    <Trophy className="size-7 text-primary" />
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="text-md font-bold uppercase text-gray-800">Partidos</span>
+                    <Trophy className="size-6 text-primary" />
                   </div>
-                  <div className="font-heading text-4xl text-foreground mb-3">{stats?.totalGames || 0}</div>
 
+                  <div className="text-center p-3 rounded-lg bg-gray-50/80 border border-gray-100 mb-3">
+                    <div className="font-heading text-4xl text-foreground mb-1">{stats?.totalGames || 0}</div>
+                    <div className="text-xs font-bold text-gray-600 uppercase tracking-wide">
+                      En Total
+                    </div>
+                  </div>
                   <div className="space-y-3">
                     {/* Victorias */}
                     <div className="flex items-center justify-between gap-2">
@@ -225,13 +231,14 @@ export default function PublicDashboard() {
                   </div>
                 </div>
 
+                {/*Goles*/}
                 <div className="flat-card relative overflow-hidden rounded-xl">
                   <div className="mb-4 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Goles</span>
-                    <Goal className="size-7 text-gray-400"/>
+                    <span className="text-md font-bold uppercase text-gray-800">Goles</span>
+                    <Goal className="size-6 text-gray-400"/>
                   </div>
 
-                  {/* Sección principal con comparación visual */}
+                  {/* Sección principal*/}
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     {/* Goles a Favor */}
                     <div className="text-center p-3 rounded-lg bg-green-50/80 border border-green-100">
@@ -255,27 +262,97 @@ export default function PublicDashboard() {
                   </div>
 
                   {/* Diferencia destacada */}
-                  <div className="text-center p-3 border-dashed border-t-2">
+                  <div className="text-center pt-3 border-dashed border-t-2">
                     <div className="flex justify-between">
-                      <div className="text-sm font-bold text-accent mb-1">Diferencia</div>
+                      <div className="text-sm font-bold text-accent mb-1">Diferencia Goles</div>
                       <div className={`text-md font-bold ${stats && stats.goalsFor - stats.goalsAgainst > 0 ? 'text-green-600' : stats && stats.goalsFor - stats.goalsAgainst < 0 ? 'text-red-600' : 'text-gray-600'}`}>
                         {stats && stats.goalsFor - stats.goalsAgainst > 0 ? "+" : ""}
                         {stats ? stats.goalsFor - stats.goalsAgainst : 0}
                       </div>
                     </div>
-                    <div className="text-xs text-gray-600 font-medium mt-1">
-                      {stats && stats.goalsFor - stats.goalsAgainst > 0 ? 'Balance positivo' : stats && stats.goalsFor - stats.goalsAgainst < 0 ? 'Balance negativo' : 'Balance equilibrado'}
+                    <div className="mt-3 flex justify-center">
+                      {stats && stats.goalsFor - stats.goalsAgainst > 0 ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-green-800 border border-green-700">
+                          <span className="w-2 h-2 bg-green-600 rounded-full mr-2"></span>
+                          Balance Positivo
+                        </span>
+                      ) : stats && stats.goalsFor - stats.goalsAgainst < 0 ? (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-red-800 border border-red-700">
+                          <span className="w-2 h-2 bg-red-600 rounded-full mr-2"></span>
+                          Balance Negativo
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold text-gray-800 border border-gray-700">
+                          <span className="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
+                          Balance Equilibrado
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
 
+                {/*Rendimiento*/}
                 <div className="flat-card relative overflow-hidden rounded-xl">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-bold uppercase text-gray-400">Victorias</span>
-                    <TrendingUp className="size-7 text-accent" />
+                  <div className="mb-6 flex items-center justify-between">
+                    <span className="text-md font-bold uppercase text-gray-800">Rendimiento General</span>
+                    <TrendingUp className="size-6 text-accent" />
                   </div>
-                  <div className="font-heading text-4xl text-foreground">{stats?.winPercentage || 0}%</div>
-                  <div className="mt-2 text-xs font-bold text-accent">RENDIMIENTO GLOBAL</div>
+
+                  <div className="text-center mb-6">
+                    <div className="font-heading text-4xl font-bold text-foreground mb-2">
+                      {stats?.winPercentage || 0}%
+                    </div>
+                    <div className="text-sm font-bold text-accent uppercase tracking-wide">
+                      Porcentaje de Victorias
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">
+                      De <strong>{stats?.totalGames || 0}</strong> partidos jugados
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Puntos Totales */}
+                    <div className="flex flex-col justify-center items-center p-4 rounded-lg bg-accent/10 border border-accent/20">
+                      <p className="text-xs font-bold text-accent uppercase">Puntos</p>
+                      <div className="text-2xl font-bold text-accent">
+                        {((stats?.wins || 0) * 3) + (stats?.draws || 0)}
+                      </div>
+                      <div className="text-xs text-accent">
+                        Max. posible: {(stats?.totalGames || 0) * 3}
+                      </div>
+                    </div>
+
+                    {/* Clasificación */}
+                    <div className="flex flex-col justify-center items-center p-4 rounded-lg bg-primary/10 border border-primary/20">
+                      <p className="text-xs font-bold text-primary uppercase">
+                        Rendimiento
+                      </p>
+                      <div className="text-lg font-bold text-primary">
+                        {stats?.winPercentage >= 80 ? '⭐⭐⭐' :
+                         stats?.winPercentage >= 60 ? '⭐⭐' :
+                         stats?.winPercentage >= 40 ? '⭐' : '📈'}
+                      </div>
+                      <div className="text-xs text-primary uppercase">
+                        {stats?.winPercentage >= 80 ? 'Excelente' :
+                         stats?.winPercentage >= 60 ? 'Muy Bueno' :
+                         stats?.winPercentage >= 40 ? 'Regular' : 'En Progreso'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Barra de progreso final */}
+                  <div className="mt-6 pt-4 border-dashed border-t-2">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-bold text-gray-600">Progreso de Temporada</span>
+                      <span className="text-sm font-bold text-accent">{stats?.winPercentage || 0}%</span>
+                    </div>
+                    <div className="relative h-3 bg-accent/20 rounded-full overflow-hidden">
+                      <div
+                        className="absolute left-0 top-0 h-full bg-accent rounded-full transition-all duration-700"
+                        style={{ width: `${stats?.winPercentage || 0}%` }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : (
