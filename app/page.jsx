@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User, AlertCircle } from "lucide-react"
 import { db } from "@/lib/db"
-import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
 
 export default function PublicDashboard() {
   const [nextMatch, setNextMatch] = useState(null)
@@ -14,41 +14,63 @@ export default function PublicDashboard() {
   const [lastMatches, setLastMatches] = useState([])
   const [topScorers, setTopScorers] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [matchData, statsData, infoData, callUpData, lastMatchesData, playersData] = await Promise.all([
-          db.getNextMatch(),
-          db.getTeamStats(),
-          db.getTeamInfo(),
-          db.getCallUp(),
-          db.getLastMatches(10),
-          db.getPlayers(),
-        ])
-        
-        setNextMatch(matchData)
-        setStats(statsData)
-        setTeamInfo(infoData)
-        setLastMatches(lastMatchesData)
-        const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
-        setTopScorers(sortedScorers.slice(0, 6))
-        setCallUp(callUpData)
-        
-      } catch (error) {
-        console.error("Error loading data:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
     loadData()
   }, [])
+
+  const loadData = async () => {
+    try {
+      setLoading(true)
+      setError(null) // Limpiar error anterior
+      const [matchData, statsData, infoData, callUpData, lastMatchesData, playersData] = await Promise.all([
+        db.getNextMatch(),
+        db.getTeamStats(),
+        db.getTeamInfo(),
+        db.getCallUp(),
+        db.getLastMatches(10),
+        db.getPlayers(),
+      ])
+
+      setNextMatch(matchData)
+      setStats(statsData)
+      setTeamInfo(infoData)
+      setLastMatches(lastMatchesData)
+      const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
+      setTopScorers(sortedScorers.slice(0, 6))
+      setCallUp(callUpData)
+
+    } catch (error) {
+      console.error("Error loading data:", error)
+      setError("No se pudieron cargar los datos del equipo. Verifica tu conexión a internet e intenta nuevamente.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white">
         <p className="text-accent">Cargando...</p>
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-2 bg-white">
+        <div className="max-w-lg rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+          <div className="text-destructive mb-4">
+            <AlertCircle className="mx-auto h-12 w-12" />
+          </div>
+          <h3 className="text-lg font-medium text-destructive mb-2">Error al cargar datos</h3>
+          <p className="text-muted-foreground mb-4">{error}</p>
+          <Button onClick={loadData} variant="outline">
+            Intentar nuevamente
+          </Button>
+        </div>
       </div>
     )
   }
