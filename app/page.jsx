@@ -513,8 +513,16 @@ export default function PublicDashboard() {
                   </div>
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center gap-4">
-                      <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-xl font-bold text-primary">
-                        {player.number}
+                      {/* Número del jugador con icono de camiseta */}
+                      <div className="relative">
+                        <div className="relative flex h-12 w-12 items-center justify-center">
+                          {/* Icono de camiseta como fondo */}
+                          <Shirt className="absolute h-11 w-11 text-primary/30" />
+                          {/* Número sobre la camiseta */}
+                          <div className="relative z-10 text-md font-bold text-primary">
+                            {player.number}
+                          </div>
+                        </div>
                       </div>
                       <div>
                         <div className="font-heading text-lg uppercase text-foreground">{player.name}</div>
