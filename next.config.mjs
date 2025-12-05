@@ -2,6 +2,7 @@
 const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
+    // ignoreBuildErrors: false, // Para produccion
   },
   images: {
     unoptimized: true,
