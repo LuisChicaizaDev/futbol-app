@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User, AlertCircle, Shirt } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User, AlertCircle, Shirt, CalendarX } from "lucide-react"
 import { db } from "@/lib/db"
 import { Button } from "@/components/ui/button"
 
@@ -183,8 +183,13 @@ export default function PublicDashboard() {
             </div>
           ) : (
             <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-              <p className="text-xl font-bold text-gray-400">No hay partidos programados.</p>
+              <div className="mb-4">
+                  <CalendarX className="mx-auto h-12 w-12 text-gray-300" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-400 mb-2">Sin partido programado</h3>
+              <p className="text-md text-gray-500">El próximo partido se anunciará próximamente.</p>
             </div>
+            
           )}
         </section>
 
@@ -390,7 +395,7 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-accent"></div>
               <h2 className="font-heading text-2xl uppercase text-primary md:text-3xl">Últimos Resultados</h2>
             </div>
-            <p className="text-gray-600 my-4 text-md ml-4">Últimos <strong>{lastMatches.length}</strong> partidos jugados</p>
+            <p className="text-gray-600 my-4 text-md ml-4">Mostrando los últimos <strong>{lastMatches.length}</strong> partidos jugados</p>
 
             <div className="grid md:grid-cols-2 gap-6">
               {lastMatches.map((match) => {
@@ -741,8 +746,8 @@ export default function PublicDashboard() {
                 <div className="mb-4">
                   <User className="mx-auto h-12 w-12 text-gray-300" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-400 mb-2">Sin convocatoria</h3>
-                <p className="text-sm text-gray-500">La lista de convocados se anunciará próximamente.</p>
+                <h3 className="text-xl font-medium text-gray-400 mb-2">Sin convocatoria</h3>
+                <p className="text-md text-gray-500">La lista de convocados se anunciará próximamente.</p>
               </div>
             )}
           </div>
