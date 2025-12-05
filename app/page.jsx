@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User, AlertCircle } from "lucide-react"
+import { Calendar, MapPin, Trophy, Goal, TrendingUp, Clock4, User, AlertCircle, Shirt } from "lucide-react"
 import { db } from "@/lib/db"
 import { Button } from "@/components/ui/button"
 
@@ -609,57 +609,132 @@ export default function PublicDashboard() {
               <div className="h-8 w-1.5 rounded-full bg-primary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">Convocatoria Oficial</h2>
             </div>
-            {nextMatch && (
-              <p className="text-gray-600 my-4 text-md ml-4">
-                Total <strong>{callUp.filter((p) => p.status === "Convocado").length} convocados</strong> para jugar contra <strong className="capitalize">{nextMatch.opponent}</strong>  - &nbsp;
-                <strong className="uppercase text-xs text-accent"> 
-                  {new Date(nextMatch.date).toLocaleDateString("es-ES", {
-                    weekday: "long", day: "numeric", month: "short", year: "numeric"
-                  })}
-                </strong>
-              </p>
-            )}
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              {callUp
-                .filter((p) => p.status === "Convocado")
-                .map((player) => (
-                  <div
-                    key={player.id}
-                    className="flat-card flex items-center gap-4 p-4 hover:border-primary hover:shadow-sm"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-xl font-bold text-primary">
-                      {player.number}
+            {/* Información del partido */}
+            {nextMatch && (
+              <div className="bg-linear-to-r from-primary/5 to-accent/5 rounded-xl p-4 mb-6 border border-primary/10">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <User className="size-5 text-primary" />
+                      <span className="font-bold text-primary">
+                        {callUp.filter((p) => p.status === "Convocado").length} convocados
+                      </span>
                     </div>
-                    <div>
-                      <div className="font-heading text-lg uppercase text-foreground">{player.name}</div>
-                      <div className="text-xs font-bold uppercase text-primary">{player.position}</div>
+                    <div className="h-4 w-px bg-gray-400"></div>
+                    <div className="flex items-center gap-2">
+                      <Trophy className="size-4 text-accent" />
+                      <span className="font-bold text-gray-700">vs {nextMatch.opponent}</span>
                     </div>
                   </div>
-                ))}
-            </div>
-
-            {/* Resumen de lesionados y suspendidos */}
-            {nextMatch && callUp.filter((p) => p.status === "Convocado").length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-4 text-sm">
-                <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2">
-                  <div className="h-2 w-2 rounded-full bg-destructive"></div>
-                  <span className="font-medium text-destructive">
-                    Jugadores Lesionados: <strong>{callUp.filter((p) => p.status === "Lesionado").length}</strong>
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
-                  <div className="h-2 w-2 rounded-full bg-muted-foreground"></div>
-                  <span className="font-medium text-muted-foreground">
-                    Jugadores Suspendidos: <strong>{callUp.filter((p) => p.status === "Suspendido").length}</strong>
-                  </span>
+                  <div className="text-sm text-accent font-medium">
+                    {new Date(nextMatch.date).toLocaleDateString("es-ES", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric"
+                    })}
+                  </div>
                 </div>
               </div>
             )}
 
-            {callUp.filter((p) => p.status === "Convocado").length === 0 && (
+            {/* Lista de convocados */}
+            {callUp.filter((p) => p.status === "Convocado").length > 0 ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {callUp
+                    .filter((p) => p.status === "Convocado")
+                    .sort((a, b) => {
+                      // Orden personalizado por posición: Portero -> Defensa -> Mediocampista -> Delantero
+                      const positionOrder = {
+                        'Portero': 1,
+                        'Defensa': 2,
+                        'Mediocampista': 3,
+                        'Delantero': 4
+                      };
+
+                      // Si la posición no existe en positionOrder, asigna el valor 5 
+                      const orderA = positionOrder[a.position] || 5;
+                      const orderB = positionOrder[b.position] || 5;
+
+                      // Si tienen la misma posición, ordenar por número de camiseta
+                      if (orderA === orderB) {
+                        return a.number - b.number;
+                      }
+
+                      return orderA - orderB;
+                    })
+                    .map((player) => {
+                      // Colores por posición
+                      const positionColors = {
+                        'Portero': 'bg-red-50 border-red-200 text-red-700',
+                        'Defensa': 'bg-green-50 border-green-200 text-green-700',
+                        'Mediocampista': 'bg-yellow-50 border-yellow-200 text-yellow-700',
+                        'Delantero': 'bg-blue-50 border-blue-200 text-blue-700',
+                        'default': 'bg-gray-50 border-gray-200 text-gray-700'
+                      };
+
+                      const positionColor = positionColors[player.position] || positionColors.default;
+
+                      return (
+                        <div
+                          key={player.id}
+                          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/30"
+                        >
+                          <div className="flex items-center gap-3">
+                            {/* Número del jugador con icono de camiseta */}
+                            <div className="relative">
+                              <div className="relative flex h-16 w-16 items-center justify-center">
+                                {/* Icono de camiseta como fondo */}
+                                <Shirt className="absolute h-12 w-12 text-primary/30" />
+                                {/* Número sobre la camiseta */}
+                                <div className="relative z-10 text-lg font-bold text-primary">
+                                  {player.number}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Información del jugador */}
+                            <div className="flex-1 min-w-0">
+                              <div className="font-heading text-base font-bold text-foreground truncate uppercase">
+                                {player.name}
+                              </div>
+                              <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${positionColor} mt-1`}>
+                                {player.position}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Resumen de lesionados y suspendidos */}
+                {nextMatch && callUp.filter((p) => p.status === "Convocado").length > 0 && (
+                  <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2">
+                      <div className="h-2 w-2 rounded-full bg-destructive"></div>
+                      <span className="font-medium text-destructive">
+                        Jugadores Lesionados: <strong>{callUp.filter((p) => p.status === "Lesionado").length}</strong>
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 rounded-lg bg-muted px-3 py-2">
+                      <div className="h-2 w-2 rounded-full bg-muted-foreground"></div>
+                      <span className="font-medium text-muted-foreground">
+                        Jugadores Suspendidos: <strong>{callUp.filter((p) => p.status === "Suspendido").length}</strong>
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
               <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
-                <p className="text-md font-semibold text-gray-400">Aún no se ha anunciado la convocatoria.</p>
+                <div className="mb-4">
+                  <User className="mx-auto h-12 w-12 text-gray-300" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-400 mb-2">Sin convocatoria</h3>
+                <p className="text-sm text-gray-500">La lista de convocados se anunciará próximamente.</p>
               </div>
             )}
           </div>
