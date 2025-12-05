@@ -14,10 +14,30 @@ const inter = Inter({
   variable: "--font-sans",
 })
 
+//  Metadata API - Funciona directamente sin importar nada
+/**
+ * Funciona en Server Components:
+  Layouts (layout.jsx)
+  Páginas (page.jsx)
+  NO funciona en Client Components
+ */
 export const metadata = {
-  title: "Brasil FC - Gestión de Equipo",
-  description: "Sistema de gestión y seguimiento para el equipo de fútbol Brasil FC",
-    generator: 'v0.app'
+  title: "Fútbol App - Gestión de Equipo",
+  description: "Sistema de gestión y seguimiento para un equipo de fútbol",
+  generator: 'v0.app',
+  keywords: ["fútbol", "equipo", "gestión"],
+  authors: [{ name: "Luis Chicaiza" }],
+  openGraph: {
+    title: "Fútbol App",
+    description: "Gestión de equipo de fútbol",
+    images: ["/placeholder-logo.png"]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fútbol App",
+    description: "Gestión de equipo",
+    images: ["/placeholder-logo.png"]
+  }
 }
 
 export default function RootLayout({ children }) {
