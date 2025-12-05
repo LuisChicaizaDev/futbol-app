@@ -517,7 +517,7 @@ export default function PublicDashboard() {
                       <div className="relative">
                         <div className="relative flex h-12 w-12 items-center justify-center">
                           {/* Icono de camiseta como fondo */}
-                          <Shirt className="absolute h-11 w-11 text-primary/30" />
+                          <Shirt className="absolute h-11 w-11 text-primary/30 stroke-1" />
                           {/* Número sobre la camiseta */}
                           <div className="relative z-10 text-md font-bold text-primary">
                             {player.number}
@@ -688,14 +688,14 @@ export default function PublicDashboard() {
                       return (
                         <div
                           key={player.id}
-                          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/30"
+                          className="group relative overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-xs transition-all duration-200 hover:shadow-md hover:border-primary/30"
                         >
                           <div className="flex items-center gap-3">
                             {/* Número del jugador con icono de camiseta */}
                             <div className="relative">
                               <div className="relative flex h-16 w-16 items-center justify-center">
                                 {/* Icono de camiseta como fondo */}
-                                <Shirt className="absolute h-12 w-12 text-primary/30" />
+                                <Shirt className="absolute h-12 w-12 text-primary/30 stroke-1" />
                                 {/* Número sobre la camiseta */}
                                 <div className="relative z-10 text-lg font-bold text-primary">
                                   {player.number}
