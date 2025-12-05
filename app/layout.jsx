@@ -27,16 +27,30 @@ export const metadata = {
   generator: 'v0.app',
   keywords: ["fútbol", "equipo", "gestión"],
   authors: [{ name: "Luis Chicaiza" }],
+
+  // FAVICON
+  icons: {
+    // Favicon principal 
+    icon: "/icon.svg",
+    // Fallback para navegadores antiguos
+    icon: [
+      { url: "/icon-light-32x32.png", media: "(prefers-color-scheme: light)" },
+      { url: "/icon-dark-32x32.png", media: "(prefers-color-scheme: dark)" }
+    ],
+    apple: "/apple-icon.png",
+    shortcut: "/icon.svg"
+  },
+
   openGraph: {
     title: "Fútbol App",
     description: "Gestión de equipo de fútbol",
-    images: ["/placeholder-logo.png"]
+    images: ["/logo-og.jpg"]
   },
   twitter: {
     card: "summary_large_image",
     title: "Fútbol App",
     description: "Gestión de equipo",
-    images: ["/placeholder-logo.png"]
+    images: ["/logo-og.jpg"]
   }
 }
 
