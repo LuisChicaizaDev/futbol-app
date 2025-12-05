@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Users, Loader2, AlertCircle, CalendarIcon, ListChecks } from "lucide-react"
+import { Users, Loader2, AlertCircle, CalendarIcon, ListChecks, Shirt, Trophy } from "lucide-react"
 import { db } from "@/lib/db"
 import { useToast } from "@/hooks/use-toast"
 
@@ -206,9 +206,21 @@ export function CallUpManagement() {
           <ListChecks className="h-5 w-5" />
           Gestión de Convocatoria
         </CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Convocatoria para: <strong className="capitalize">{nextMatch.opponent}</strong> - {new Date(nextMatch.date).toLocaleDateString("es-ES")}
-        </p>
+        {/**Convocatoria proximo partido */}
+        <div className="flex items-center gap-4">
+          <p className="text-muted-foreground">
+            Convocatoria vs <span className="font-semibold text-gray-700">{nextMatch.opponent}</span>
+          </p>
+          <div className="h-4 w-px bg-gray-400"></div>
+          <p className="text-sm text-accent font-medium">
+            {new Date(nextMatch.date).toLocaleDateString("es-ES", {
+              weekday: "short",
+              day: "numeric",
+              month: "short",
+              year: "numeric"
+            })}
+          </p>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="mb-6 grid gap-4 md:grid-cols-3">
@@ -233,35 +245,70 @@ export function CallUpManagement() {
             <p className="text-muted-foreground mb-4">
               No se han creado convocatorias para este partido aún.
             </p>
-            <Button 
-              onClick={() => initializeCallUps(nextMatch.id, players)} 
-              disabled={saving}
-            >
-              {saving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creando convocatorias...
-                </>
-              ) : (
-                "Crear convocatorias iniciales"
-              )}
-            </Button>
           </div>
         ) : (
           <div className="space-y-3">
-            {callUp.map((item) => {
+            {callUp
+              .sort((a, b) => {
+                // Obtener los objetos de jugador completos
+                const playerA = getPlayerById(a.playerId)
+                const playerB = getPlayerById(b.playerId)
+
+                if (!playerA || !playerB) return 0
+
+                // Orden personalizado por posición: Portero -> Defensa -> Mediocampista -> Delantero
+                const positionOrder = {
+                  'Portero': 1,
+                  'Defensa': 2,
+                  'Mediocampista': 3,
+                  'Delantero': 4
+                };
+
+                const orderA = positionOrder[playerA.position] || 5;
+                const orderB = positionOrder[playerB.position] || 5;
+
+                // Si tienen la misma posición, ordenar por número de camiseta
+                if (orderA === orderB) {
+                  return playerA.number - playerB.number;
+                }
+
+                return orderA - orderB;
+              })
+              .map((item) => {
               const player = getPlayerById(item.playerId)
               if (!player) return null
+
+              // Colores por posición
+              const positionColors = {
+                'Portero': 'bg-red-50 border-red-200 text-red-700',
+                'Defensa': 'bg-green-50 border-green-200 text-green-700',
+                'Mediocampista': 'bg-yellow-50 border-yellow-200 text-yellow-700',
+                'Delantero': 'bg-blue-50 border-blue-200 text-blue-700',
+                'default': 'bg-gray-50 border-gray-200 text-gray-700'
+              };
+
+              const positionColor = positionColors[player.position] || positionColors.default;
 
               return (
                 <div key={item.playerId} className="flex items-center justify-between flex-wrap gap-4 rounded-lg border p-4">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 font-bold text-primary">
-                      {player.number}
+                    {/* Número del jugador con icono de camiseta */}
+                    <div className="relative">
+                      <div className="relative flex h-12 w-12 items-center justify-center">
+                        {/* Icono de camiseta como fondo */}
+                        <Shirt className="absolute h-11 w-11 text-primary/30 stroke-1" />
+                        {/* Número sobre la camiseta */}
+                        <div className="relative z-10 text-md font-bold text-primary">
+                          {player.number}
+                        </div>
+                      </div>
                     </div>
+
                     <div>
                       <div className="font-medium capitalize">{player.name}</div>
-                      <div className="text-sm text-muted-foreground capitalize">{player.position}</div>
+                      <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border capitalize ${positionColor}`}>
+                        {player.position}
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
