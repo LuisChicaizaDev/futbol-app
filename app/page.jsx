@@ -154,7 +154,7 @@ export default function PublicDashboard() {
                 <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-2 border-t px-6 pt-4 text-md font-semibold backdrop-blur-sm">
                   <div className="flex items-center justify-center gap-2">
                     <MapPin className="h-5 w-5 text-secondary" />
-                    {nextMatch.location === "Local" ? teamInfo?.stadium || "Sin estadio" : "Cancha Visitante"}
+                    {nextMatch.location === "Local" ? teamInfo?.stadium || "Sin estadio" : "Estadio Equipo Visitante"}
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Clock4 className="h-5 w-5 text-secondary"/>
@@ -550,7 +550,9 @@ export default function PublicDashboard() {
                     </div>
                     <div className="flex justify-between text-xs font-bold text-gray-500">
                       {/* <span>Partidos: {player.gamesPlayed ?? 0}</span> */}
-                      <span>Tarjetas: {player.yellowCards ?? 0}A / {player.redCards ?? 0}R</span>
+                      <span>
+                        Tarjetas: <span className="text-yellow-600">{player.yellowCards ?? 0}A</span> / <span className="text-red-600">{player.redCards ?? 0}R</span>
+                      </span>
                     </div>
                   </div>
                 </div>
