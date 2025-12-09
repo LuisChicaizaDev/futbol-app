@@ -13,6 +13,7 @@ export default function PublicDashboard() {
   const [callUp, setCallUp] = useState([])
   const [lastMatches, setLastMatches] = useState([])
   const [topScorers, setTopScorers] = useState([])
+  const [players, setPlayers] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -40,6 +41,7 @@ export default function PublicDashboard() {
       const sortedScorers = [...playersData].sort((a, b) => (b.goals || 0) - (a.goals || 0))
       setTopScorers(sortedScorers.slice(0, 6))
       setCallUp(callUpData)
+      setPlayers(playersData)
 
     } catch (error) {
       console.error("Error loading data:", error)
@@ -745,9 +747,15 @@ export default function PublicDashboard() {
                     })}
                 </div>
 
-                {/* Resumen de lesionados y suspendidos */}
+                {/* Resumen de Total jugadores, lesionados y suspendidos */}
                 {nextMatch && callUp.filter((p) => p.status === "Convocado").length > 0 && (
                   <div className="mt-6 flex flex-wrap gap-4 text-sm">
+                    <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2">
+                      <div className="h-2 w-2 rounded-full bg-primary"></div>
+                      <span className="font-medium text-primary">
+                        Plantilla Total: <strong>{players.length}</strong>
+                      </span>
+                    </div>
                     <div className="flex items-center gap-2 rounded-lg bg-destructive/10 px-3 py-2">
                       <div className="h-2 w-2 rounded-full bg-destructive"></div>
                       <span className="font-medium text-destructive">
