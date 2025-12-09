@@ -204,7 +204,7 @@ export default function PublicDashboard() {
 
             <p className="text-gray-600 my-4 text-md ml-4">Estadísticas generales del equipo</p>
 
-            {stats ? (
+            {stats && stats.totalGames > 0 ? (
               <div className="grid sm:grid-cols-2 md:grid-cols-1 gap-5">
                 {/*Partidos*/}
                 <div className="flat-card relative overflow-hidden rounded-xl">
@@ -384,7 +384,11 @@ export default function PublicDashboard() {
               </div>
             ) : (
               <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-                <p className="text-md font-semibold text-gray-400">Aún no hay estadísticas del equipo disponible.</p>
+                <div className="mb-4">
+                  <TrendingUp className="mx-auto h-12 w-12 text-gray-300" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-400 mb-2">Sin estadísticas</h3>
+                <p className="text-md text-gray-500">Aún no hay estadísticas del equipo disponible.</p>
               </div>
             )}
           </section>
@@ -494,7 +498,7 @@ export default function PublicDashboard() {
                     <Calendar className="mx-auto h-12 w-12 text-gray-300" />
                   </div>
                   <h3 className="text-lg font-medium text-gray-400 mb-2">Sin partidos registrados</h3>
-                  <p className="text-sm text-gray-500">Los resultados aparecerán aquí una vez que se jueguen partidos.</p>
+                  <p className="text-md text-gray-500">Los resultados aparecerán aquí una vez que se jueguen partidos.</p>
                 </div>
               )}
             </div>
@@ -554,7 +558,11 @@ export default function PublicDashboard() {
             </div>
           ) : (
             <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
-              <p className="text-md font-semibold text-gray-400">No hay registros de goleadores disponibles.</p>
+              <div className="mb-4">
+                <Goal className="mx-auto h-12 w-12 text-gray-300" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-400 mb-2">Sin goleadores</h3>
+              <p className="text-md text-gray-500">Aún no hay registros de goleadores disponibles.</p>
             </div>
           )}
         </section>
@@ -570,7 +578,7 @@ export default function PublicDashboard() {
 
             <p className="text-gray-600 my-4 text-md ml-4">Información general del equipo</p>
 
-            {teamInfo ? (
+            {teamInfo && teamInfo.name ? (
               <div className="flat-card bg-white">
                 <div className="mb-6 text-center">
                   {teamInfo?.logoUrl ? (
@@ -611,7 +619,11 @@ export default function PublicDashboard() {
               </div>
             ) : (
               <div className="col-span-full rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center text-gray-500">
-                <p className="text-md font-semibold text-gray-400">Aún no hay informarción del equipo disponible.</p>
+                <div className="mb-4">
+                  <AlertCircle className="mx-auto h-12 w-12 text-gray-300" />
+                </div>
+                <h3 className="text-xl font-medium text-gray-400 mb-2">Sin información</h3>
+                <p className="text-md text-gray-500">Aún no hay informarción del equipo disponible.</p>
               </div>
             )}
           </div>
