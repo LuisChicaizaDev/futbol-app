@@ -151,10 +151,14 @@ export default function PublicDashboard() {
                   </div>
                 </div>
 
-                <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-2 border-t px-6 pt-4 text-md font-semibold backdrop-blur-sm">
+                <div className="mt-12 w-full flex items-center justify-center md:justify-between flex-wrap gap-6 border-t px-6 pt-4 text-md font-semibold backdrop-blur-sm">
                   <div className="flex items-center justify-center gap-2">
                     <MapPin className="h-5 w-5 text-secondary" />
                     {nextMatch.location === "Local" ? teamInfo?.stadium || "Sin estadio" : "Estadio Equipo Visitante"}
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <Trophy className="h-5 w-5 text-secondary" />
+                    <span className="font-medium">{nextMatch.competition}</span>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <Clock4 className="h-5 w-5 text-secondary"/>
