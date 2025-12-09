@@ -73,7 +73,7 @@ export function MatchManagement() {
       // Actualizar el formData con el stadium como competition por defecto
       setFormData(prev => ({
         ...prev,
-        competition: info.stadium || ""
+        competition: ""
       }))
     } catch (error) {
       console.error("Error loading team info:", error)
@@ -126,7 +126,7 @@ export function MatchManagement() {
         time: "",
         opponent: "",
         location: "Local",
-        competition: teamInfo?.stadium || "",
+        competition: "",
         goalsFor: "",
         goalsAgainst: "",
         result: "Victoria",
@@ -194,7 +194,7 @@ export function MatchManagement() {
       time: "",
       opponent: "",
       location: "Local",
-      competition: teamInfo?.stadium || "",
+      competition: "",
       goalsFor: "",
       goalsAgainst: "",
       result: "Victoria",
@@ -320,6 +320,7 @@ export function MatchManagement() {
                   value={formData.competition}
                   onChange={(e) => setFormData({ ...formData, competition: e.target.value })}
                   placeholder="Ej: Liga, Copa, Amistoso"
+                  required
                   disabled={saving}
                 />
               </div>

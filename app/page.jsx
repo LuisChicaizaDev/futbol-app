@@ -171,6 +171,10 @@ export default function PublicDashboard() {
                 <h3 className="mb-6 font-heading text-xl uppercase text-primary border-b-2 border-b-primary pb-4">Detalles del Partido</h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
+                    <span className="font-bold text-gray-500">Competición:</span>
+                    <span className="font-bold text-foreground">{nextMatch.competition}</span>
+                  </div>
+                  <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Estadio:</span>
                     <span className="font-bold text-foreground">{teamInfo?.stadium || "Sin estadio"}</span>
                   </div>
@@ -178,10 +182,10 @@ export default function PublicDashboard() {
                     <span className="font-bold text-gray-500">Hora:</span>
                     <span className="font-bold text-foreground">{nextMatch.time} h</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
+                  {/* <div className="flex items-center justify-center md:justify-between flex-wrap gap-2 rounded-lg bg-gray-50 p-3">
                     <span className="font-bold text-gray-500">Concentración:</span>
                     <span className="font-bold text-foreground">30 min antes</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
