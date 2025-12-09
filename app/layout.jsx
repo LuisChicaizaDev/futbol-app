@@ -43,13 +43,13 @@ export const metadata = {
 
   openGraph: {
     title: "Fútbol App",
-    description: "Gestión de equipo de fútbol",
+    description: "Sistema de gestión y seguimiento para un equipo de fútbol",
     images: ["/logo-og.jpg"]
   },
   twitter: {
     card: "summary_large_image",
     title: "Fútbol App",
-    description: "Gestión de equipo",
+    description: "Sistema de gestión y seguimiento para un equipo de fútbol",
     images: ["/logo-og.jpg"]
   }
 }
