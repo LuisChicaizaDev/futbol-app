@@ -788,7 +788,14 @@ export default function PublicDashboard() {
       <footer className="mt-50 bg-accent py-6 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 font-heading text-2xl uppercase tracking-widest text-secondary">{teamInfo.name}</div>
+        </div>
+
+        <div className="flex justify-around flex-wrap border-t border-white/30 pt-6">
           <p className="text-sm">© 2025 Todos los derechos reservados.</p>
+          <p className="text-sm">
+            Desarrollado por <a href="https://github.com/LuisChicaizaDev/" target="_blank" className="text-secondary hover:text-secondary/85 transition-all">
+            Luis Chicaiza</a>
+          </p>
         </div>
       </footer>
     </div>

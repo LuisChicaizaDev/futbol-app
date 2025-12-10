@@ -368,9 +368,13 @@ export default function AdminDashboard() {
         </div>
 
          {/* Footer */}
-        <footer className="mt-50 bg-accent py-6 text-white">
-          <div className="container mx-auto px-4 text-center">
+        <footer className="mt-50 bg-accent p-6 text-white">
+          <div className="flex justify-around flex-wrap">
             <p className="text-sm">© 2025 Todos los derechos reservados.</p>
+            <p className="text-sm">
+              Desarrollado por <a href="https://github.com/LuisChicaizaDev/" target="_blank" className="text-secondary hover:text-secondary/85 transition-all">
+              Luis Chicaiza</a>
+            </p>
           </div>
         </footer>
       </main>
