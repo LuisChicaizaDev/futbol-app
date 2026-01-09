@@ -22,7 +22,8 @@ const inter = Inter({
   NO funciona en Client Components
  */
 export const metadata = {
-  title: "Fútbol App - Gestión de Equipo",
+  metadataBase: new URL('https://futbol-app-mu.vercel.app'),
+  title: "Fútbol App - Gestión equipo de fútbol",
   description: "Sistema de gestión y seguimiento para un equipo de fútbol",
   generator: 'v0.app',
   keywords: ["fútbol", "equipo", "gestión"],
@@ -42,7 +43,7 @@ export const metadata = {
   },
 
   openGraph: {
-    title: "Fútbol App",
+    title: "Fútbol App - Gestión equipo de fútbol",
     description: "Sistema de gestión y seguimiento para un equipo de fútbol",
     images: ["/logo-og.jpg"]
   },
