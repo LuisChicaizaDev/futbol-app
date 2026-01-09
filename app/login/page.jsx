@@ -143,9 +143,9 @@ export default function LoginPage() {
             {loading ? "Verificando..." : "Ingresar"}
           </Button>
         </form>
-        <div className="flex justify-center border-t border-gray-100 p-4">
+        {/* <div className="flex justify-center border-t border-gray-100 p-4">
           <p className="text-xs text-muted-foreground">Credenciales demo: admin@futbolapp.com / admin123</p>
-        </div>
+        </div> */}
       </div>
     </div>
   )
