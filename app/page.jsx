@@ -791,7 +791,7 @@ export default function PublicDashboard() {
         </div>
 
         <div className="flex justify-around flex-wrap border-t border-white/30 pt-6">
-          <p className="text-sm">© 2025 Todos los derechos reservados.</p>
+          <p className="text-sm">© {new Date().getFullYear()} Todos los derechos reservados.</p>
           <p className="text-sm">
             Desarrollado por <a href="https://github.com/LuisChicaizaDev/" target="_blank" className="text-secondary hover:text-secondary/85 transition-all">
             Luis Chicaiza</a>
