@@ -580,9 +580,9 @@ export default function PublicDashboard() {
         </section>
 
         {/* Team Info y Convocatoria*/}
-        <div className="grid gap-8 lg:grid-cols-3 my-12">
+        <div className="grid gap-12 lg:gap-8 lg:grid-cols-3 my-12">
           {/* Team Info */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 order-2 lg:order-1">
             <div className="mb-6 flex items-center gap-3">
               <div className="h-8 w-1.5 rounded-full bg-secondary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">El Club</h2>
@@ -641,7 +641,7 @@ export default function PublicDashboard() {
           </div>
 
           {/* Convocatoria */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 order-1 lg:order-2">
             <div className="mb-6 flex items-center gap-3">
               <div className="h-8 w-1.5 rounded-full bg-primary"></div>
               <h2 className="font-heading text-2xl uppercase text-primary">Convocatoria Oficial</h2>
