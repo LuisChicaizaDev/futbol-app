@@ -544,7 +544,7 @@ export default function PublicDashboard() {
                         </div>
                       </div>
                       <div>
-                        <div className="font-heading text-lg uppercase text-foreground">{player.name}</div>
+                        <div className="font-heading text-lg uppercase text-foreground max-w-63">{player.name}</div>
                         <div className="text-xs font-bold uppercase text-gray-400">{player.position}</div>
                       </div>
                     </div>
@@ -734,7 +734,7 @@ export default function PublicDashboard() {
 
                             {/* Información del jugador */}
                             <div className="flex-1 min-w-0">
-                              <div className="font-heading text-base font-bold text-foreground truncate uppercase">
+                              <div className="font-heading text-base font-bold text-foreground uppercase">
                                 {player.name}
                               </div>
                               <div className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold border ${positionColor} mt-1`}>
